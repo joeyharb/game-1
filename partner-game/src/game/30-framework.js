@@ -94,6 +94,8 @@ var ctx = {
       later(function () { endMission('out'); }, 1300);
     }
   },
+  /* Points that do not count as a move (e.g. a clean drive past a pothole). */
+  bonus: function (points, at) { if (!run || run.ended) return; run.score += points; renderHUD(); if (at) floater(at.x, at.y, '+' + points); Sound.pop(); },
   finish: function () { if (run && !run.ended) endMission('completed'); },
   onCritical: null       // mission may set a function(focus) to animate its camera
 };
@@ -140,7 +142,7 @@ function endMission(status) {
   if (status === 'critical') d.anyCritical = true;          // tracks ALL attempts, not only the last one
   d.missions[M.id] = mr;
   d.bestStreak = Math.max(d.bestStreak || 0, run.maxStreak);
-  var playable = C.missions.filter(function (x) { return x.playable !== false; });
+  var playable = C.missions.filter(isPlayable);
   if (playable.length && playable.every(function (x) { return d.missions[x.id] && d.missions[x.id].completed; })) d.allDoneOnce = true;
   d.attempts.push(rec); if (d.attempts.length > 200) d.attempts = d.attempts.slice(-200);
   var newBadges = updateBadges(), newUnlocks = updateUnlocks();
@@ -150,7 +152,7 @@ function endMission(status) {
 
 function ruleMet(rule) {
   var d = Store.get(), parts = String(rule).split(':'), kind = parts[0], arg = parts[1], m = arg ? d.missions[arg] : null;
-  var playable = C.missions.filter(function (x) { return x.playable !== false; });
+  var playable = C.missions.filter(isPlayable);
   switch (kind) {
     case 'start': return true;
     case 'missionDone': return !!(m && m.completed);

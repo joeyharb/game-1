@@ -17,7 +17,7 @@ Missions.M6 = { start: function (M, ctx) {
   var R = M.rush, rushLen = R.seconds * pf;
 
   var st = { phase: 'announce', stations: {}, plots: [], people: [], houses: [], sel: null, team: null,
-             usedDecoys: {}, hitChips: {}, rushT: 0, spawnT: 1.5, doorT: R.doorToDoorEvery * pf * 0.55, events: [], evIdx: 0, served: 0, firstOk: {}, ended: false, tip: 0 };
+             usedDecoys: {}, hitChips: {}, rushT: 0, spawnT: 0.4, doorT: R.doorToDoorEvery * pf * 0.5, events: [], evIdx: 0, served: 0, firstOk: {}, ended: false, tip: 0 };
   var dock = ctx.dock();
   var gl = GFX.mode === 'webgl';
   var v = { bounds: BOUNDS_ANN, fit: { elev: 52, azim: 0, rotatePortrait: true,
@@ -352,7 +352,7 @@ Missions.M6 = { start: function (M, ctx) {
     // pick event calls
     var evs = shuffle(M.events).slice(0, M.eventsPerRun || 4), lastEv = evs.filter(function (e) { return e.last; });
     evs = evs.filter(function (e) { return !e.last; }).concat(lastEv);
-    st.events = evs.map(function (e, i) { var f = e.last ? 0.985 : (0.14 + i * (0.76 / Math.max(1, evs.length - (lastEv.length ? 1 : 0)))); return { e: e, at: f * rushLen, done: false }; });
+    st.events = evs.map(function (e, i) { var f = e.last ? 0.985 : (0.22 + i * (0.5 / Math.max(1, evs.length - (lastEv.length ? 1 : 0)))); return { e: e, at: f * rushLen, done: false }; });
     ctx.timer(rushLen);
   }
   function callHouse() {
@@ -418,8 +418,8 @@ Missions.M6 = { start: function (M, ctx) {
     if (st.rushT >= rushLen) { syncPeople(dt, t, true); return endRush(); }
     var ev = st.events.filter(function (e) { return !e.done && !e.e.last && st.rushT >= e.at; })[0];
     if (ev) return runEvent(ev);
-    st.spawnT -= dt; if (st.spawnT <= 0 && st.rushT < rushLen - 8) { spawn(); st.spawnT = R.spawnEvery * pf * (0.75 + Math.random() * 0.5); }
-    st.doorT -= dt; if (st.doorT <= 0 && st.rushT < rushLen - 14) { callHouse(); st.doorT = R.doorToDoorEvery * pf; }
+    st.spawnT -= dt; if (st.spawnT <= 0 && st.rushT < rushLen * 0.8) { spawn(); st.spawnT = R.spawnEvery * pf * (0.75 + Math.random() * 0.5); }
+    st.doorT -= dt; if (st.doorT <= 0 && st.rushT < rushLen * 0.7) { callHouse(); st.doorT = R.doorToDoorEvery * pf; }
     // houses waiting
     st.houses.forEach(function (h) {
       if (!h.active) return; h.patience -= dt;

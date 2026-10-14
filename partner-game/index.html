@@ -142,6 +142,10 @@ p { margin: 0 0 .6em; }
 .lbl { transform-origin: 50% 100%; font-weight: 800; font-size: 12px; background: rgba(255,255,255,.95); color: var(--text); border-radius: 8px; padding: 2px 7px; white-space: nowrap; box-shadow: 0 3px 8px rgba(0,0,0,.18); pointer-events: none; }
 .lbl.tap { pointer-events: auto; border: 0; cursor: pointer; }
 .lbl.target { background: var(--mc); color: var(--mc-text); animation: pulse 1s infinite; }
+.lbl.ok { background: #E7F6EF; color: #0B5E3E; box-shadow: 0 0 0 2px var(--ok), 0 3px 8px rgba(0,0,0,.18); }
+.lbl.doc { white-space: normal; max-width: 128px; text-align: center; line-height: 1.15; border: 2px solid #F5B301; padding: 3px 6px; }
+.lbl.slot { white-space: normal; max-width: 150px; min-width: 96px; text-align: center; line-height: 1.15; padding: 5px 7px; border: 2px dashed #19A7E0; }
+.lbl.slot.ok { border-style: solid; }
 .plotnum { width: 30px; height: 30px; border-radius: 50%; background: var(--mc); color: var(--mc-text); display: grid; place-items: center; font-weight: 900; font-size: 15px; box-shadow: 0 3px 8px rgba(0,0,0,.25); pointer-events: auto; border: 3px solid #fff; padding: 0; }
 .plotnum.side { background: #fff; color: var(--mc); border-color: var(--mc); }
 .bub { width: 46px; height: 46px; border-radius: 50%; border: 3px solid #fff; background: var(--bc, #0033A0); box-shadow: 0 4px 10px rgba(0,0,0,.28); display: grid; place-items: center; pointer-events: auto; padding: 0; position: absolute; }
@@ -228,6 +232,9 @@ p { margin: 0 0 .6em; }
 @media (max-width: 760px) {
   body { font-size: 16px; }
   .mapstop .t { display: none; }
+  .lbl.doc { font-size: 10.5px; max-width: 92px; padding: 2px 4px; }
+  .lbl.slot { font-size: 10.5px; max-width: 110px; min-width: 70px; padding: 3px 4px; }
+  .lbl { font-size: 11px; }
   .mapstop { padding: 3px 5px; }
   .toast { font-size: 14px; padding: 7px 10px; }
   #toasts { top: 58px; }
@@ -318,7 +325,7 @@ window.CONTENT = {
   meta: {
     title: 'Last Mile Heroes',
     subtitle: 'Partner onboarding game for the IOM South Sudan Core Pipeline (SNFI and WASH)',
-    version: '0.2 prototype (Mission 6)',
+    version: '0.5 (Missions 1, 2, 3, 6)',
     sourceNote: 'Based on the IOM South Sudan Core Pipeline SOP (Draft 1, September 2026), the CP Distribution Agreement 2026 and its annexes, and the WASH Cluster Core Pipeline SOP (January 2026).',
     cardNote: 'Training record, not a certification.'
   },
@@ -381,6 +388,7 @@ window.CONTENT = {
       demo: 'how to put up the plastic sheet',
       report: 'SNFI distribution report (Annex 2)',
       reportDeadline: '15 days',
+      reportDays: 15,
       reportRef: 'AG Art. 6; A1 Step 4; SOP §4.7'
     },
     WASH: {
@@ -397,6 +405,7 @@ window.CONTENT = {
       demo: 'how to use the filter cloth and the water purification tablets',
       report: 'WASH distribution and utilisation report (Annex 3)',
       reportDeadline: 'one month',
+      reportDays: 30,
       reportRef: 'AG Art. 6; A1 Step 4; WS §5; SOP §4.7'
     }
   },
@@ -500,11 +509,410 @@ window.CONTENT = {
    * other six show on the map and are built in the full version.
    * ------------------------------------------------------------------------- */
   missions: [
-    { id: 'M1', number: 1, title: 'Get on the Pipeline', place: 'Your office', color: '#F5B301', topic: 'Eligibility and onboarding', playable: false },
-    { id: 'M2', number: 2, title: 'Needs Check', place: 'Village', color: '#7A5CFA', topic: 'Needs assessment', playable: false },
-    { id: 'M3', number: 3, title: 'Request Builder', place: 'Cluster office', color: '#19A7E0', topic: 'Request and endorsement', playable: false },
-    { id: 'M4', number: 4, title: 'Warehouse Pickup', place: 'IOM hub', color: '#0033A0', topic: 'Collection', playable: false },
-    { id: 'M5', number: 5, title: 'Road to the Site', place: 'River road', color: '#8B5E34', topic: 'Transport and loss reporting', playable: false },
+    /* =========================================================================
+     * MISSION 1: GET ON THE PIPELINE  (SOP §4.2)
+     * Walk the compound, pick up the right documents, take the file to the
+     * cluster first, then sign up with the IOM CP team.
+     * ======================================================================= */
+    {
+      id: 'M1', number: 1, title: 'Get on the Pipeline', place: 'Your office', color: '#F5B301',
+      topic: 'Eligibility and onboarding', host: 'nyakuoth', playable: true,
+      intro: 'Your organisation wants to join the Core Pipeline. Gather the right documents, take the file to the cluster, then sign up with the IOM CP team.',
+      howTo: [
+        'Tap the ground to walk (arrow keys work too).',
+        'Tap a glowing document to pick it up. Leave the wrong ones.',
+        'Take the full file to the cluster desk first, then to the IOM CP desk.'
+      ],
+      rulesInPlay: ['R1', 'R2', 'R7'],
+      docsRef: 'SOP §4.2.1, §4.2.2',
+      docs: [
+        { id: 'D-01', text: 'Current registration documents', good: true, why: 'Legally registered: current registration documents in the partner file.', ref: 'SOP §4.2.1' },
+        { id: 'D-02', text: 'DDA form, completed', good: true, why: 'The DDA is mandatory for CP access.', ref: 'SOP §4.2.2' },
+        { id: 'D-03', text: 'Proof of cluster membership: meetings and 5W reports', good: true, why: 'Active cluster member: attends coordination meetings and reports through the 5W.', ref: 'SOP §4.2.1' },
+        { id: 'D-04', text: 'Project plan: response or preparedness', good: true, why: 'Humanitarian purpose: a response or preparedness intervention consistent with the response plan.', ref: 'SOP §4.2.1' },
+        { id: 'D-05', text: 'Budget for transport and insurance', good: true, why: 'Own funding: transport from the warehouse and insurance of items in your custody.', ref: 'SOP §4.2.1' },
+        { id: 'D-06', text: 'All distribution reports submitted', good: true, why: 'Reporting up to date: no distribution report overdue for the same state.', ref: 'SOP §4.2.1' },
+        { id: 'D-07', text: 'Registration certificate (expired)', why: 'Registration documents must be current.', ref: 'SOP §4.2.1' },
+        { id: 'D-08', text: 'DDA validated 30 months ago', why: 'The DDA is re-validated every 24 months.', ref: 'SOP §4.2.2' },
+        { id: 'D-09', text: 'Letter: another NGO will distribute for us', critical: 'R7', why: 'You must distribute directly in the target area, without an intermediary.', ref: 'SOP §4.2.1' },
+        { id: 'D-10', text: 'Report list: one distribution report overdue', why: 'No distribution report may be overdue for the same state.', ref: 'SOP §4.2.1' }
+      ],
+      badPerRun: 3,
+      clusterFirst: { why: 'The DDA and registration documents go to the cluster first. The CP team issues the agreement after validation.', ref: 'SOP §4.2.2' },
+      incomplete: { why: 'The cluster validates from a complete file. Collect every right document first.', ref: 'SOP §4.2.2 (Step 2 timeline)' },
+      validation: { speaker: 'nyakuoth', text: 'Thank you. We check your capacity, presence and coordination within 3 to 5 working days from a complete file.', ref: 'SOP §4.2.2' },
+      /* At the IOM CP desk, in this order. */
+      signup: [
+        { id: 'S-01', speaker: 'lual', prompt: 'Here is the CP distribution agreement. What does signing it give you?',
+          options: [
+            { text: 'The right to request. Each release still depends on cluster endorsement and stock.', correct: true },
+            { text: 'Kits whenever we ask for them.', why: 'The agreement does not guarantee release.' }
+          ], explain: 'You also sign the data protection annex.', ref: 'SOP §4.2.2, §8 (A); A1 Step 1' },
+        { id: 'S-02', speaker: 'lual', prompt: 'Who will be your Requester?',
+          options: [
+            { text: 'One focal point, for requests, reporting and liaison with IOM.', correct: true },
+            { text: 'Three staff, so someone is always free.', why: 'The CP team registers one partner focal point as Requester.' }
+          ], explain: 'One Requester keeps requests and reports in one place.', ref: 'SOP §4.2.2' },
+        { id: 'S-03', speaker: 'lual', prompt: 'Orientation day. What will it cover?',
+          options: [
+            { text: 'The SOP, reporting, data protection, PSEA, GBV risk mitigation and the non-fee model.', correct: true },
+            { text: 'Only how to fill in the request form.', why: 'Orientation covers the SOP, reporting, data protection, PSEA, GBV risk mitigation and the non-fee model.' }
+          ], explain: 'A refresher runs twice a year and when a form or system changes.', ref: 'SOP §4.2.2' }
+      ],
+      /* Majok's shortcuts while you collect. */
+      eventsPerRun: 2,
+      events: [
+        { id: 'E-11', speaker: 'majok', prompt: '"Let\'s send a request today and sign the agreement later."',
+          options: [
+            { text: 'No. No request before onboarding is complete.', correct: true },
+            { text: 'Send it, they will understand.', critical: 'R2' }
+          ], explain: 'CP access starts after the DDA, cluster validation and the signed agreement.', ref: 'SOP §4.2; A1 Step 1' },
+        { id: 'E-12', speaker: 'majok', prompt: '"River Aid can request and distribute for us up north. Easy!"',
+          options: [
+            { text: 'No. We distribute directly, without an intermediary.', correct: true },
+            { text: 'Good idea, it saves us a trip.', critical: 'R7' }
+          ], explain: 'Direct distribution is an eligibility condition.', ref: 'SOP §4.2.1' },
+        { id: 'E-13', speaker: 'majok', prompt: '"Should we pay a small fee to speed up the validation?"',
+          options: [
+            { text: 'No. All Core Pipeline activity is non-fee.', correct: true },
+            { text: 'Yes, a small one.', critical: 'R1' }
+          ], explain: 'No fee, cost or overhead, to anyone.', ref: 'SOP §1 (Modality)' }
+      ]
+    },
+
+    /* =========================================================================
+     * MISSION 2: NEEDS CHECK  (SOP §4.3)
+     * Visit households: consent first, count households, skip duplicates,
+     * note the most vulnerable. Then answer the cluster.
+     * ======================================================================= */
+    {
+      id: 'M2', number: 2, title: 'Needs Check', place: 'Village', color: '#7A5CFA',
+      topic: 'Needs assessment', host: 'nyakuoth', playable: true,
+      intro: 'An alert reports families arriving in a village. Assess the needs: visit households, ask consent, and count households, not people.',
+      howTo: [
+        'Tap a house with a bubble: you walk there.',
+        'Ask consent before you write anything.',
+        'Count households. Skip families already covered.'
+      ],
+      rulesInPlay: ['R5', 'R8'],
+      householdsPerRun: 5,
+      households: [
+        { id: 'H-01', kind: 'count',    text: 'A family of nine arrived last week. They sleep under a tree.' },
+        { id: 'H-02', kind: 'count',    text: 'A family displaced by floods two weeks ago lost all their belongings.' },
+        { id: 'H-03', kind: 'count',    text: 'A young couple with a baby arrived three days ago.' },
+        { id: 'H-04', kind: 'priority', text: 'An older man lives alone. He walks with a stick.' },
+        { id: 'H-05', kind: 'priority', text: 'A mother heads this household alone, with five children.' },
+        { id: 'H-06', kind: 'priority', text: 'A girl cares for her three younger brothers. No adult lives here.' },
+        { id: 'H-07', kind: 'priority', text: 'A family whose father uses a wheelchair.' },
+        { id: 'H-08', kind: 'assisted', text: 'This family got the same kits from another partner last month. It shows in the 5W.' },
+        { id: 'H-09', kind: 'assisted', text: 'Another partner registered this family for the same items last week.' },
+        { id: 'H-10', kind: 'refuse',   text: 'A woman says she does not want to give her name or any details.' }
+      ],
+      consent: {
+        ask: 'Introduce yourself and ask consent',
+        skip: 'Start writing their names',
+        why: 'Get consent before collecting any personal data.', ref: 'AG Art. 3; A6 (principles 1 and 4)'
+      },
+      outcomes: {
+        count:    { ok: 'Count 1 household', bad: 'Count every person as one kit', why: 'Kits are planned per household: about 6 people on average.', badWhy: 'Count households, not people. Kits are planned per household.', ref: 'SOP §2.1, §4.4' },
+        priority: { ok: 'Count 1 household and note the vulnerability', bad: 'Skip them, they can come later', why: 'Protection risks and highly vulnerable groups come first in prioritisation.', badWhy: 'Highly vulnerable households are a priority, not an afterthought.', ref: 'SOP §4.3 (Table 10); §4.6' },
+        assisted: { ok: 'Skip: already assisted (checked in the 5W)', bad: 'Count them again', why: 'Needs are cross-checked against the 5W to avoid duplication.', badWhy: 'Counting them again duplicates assistance. Check the 5W.', ref: 'SOP §4.3; A1 Step 2' },
+        refuse:   { ok: 'Respect it: record nothing personal', bad: 'Write her details anyway', critical: 'R8', why: 'Consent is free and voluntary. No consent, no personal data.', ref: 'A6 (principle 4); AG Art. 3' }
+      },
+      eventsPerRun: 2,
+      events: [
+        { id: 'E-21', speaker: 'majok', prompt: '"We assessed this village four months ago. Just reuse that report!"',
+          options: [
+            { text: 'No. An assessment is valid for 3 months.', correct: true },
+            { text: 'Reuse it, it saves time.', why: 'An assessment is valid for 3 months.' }
+          ], explain: 'A fresh assessment is done within 1 to 5 days of the alert.', ref: 'SOP §4.3' },
+        { id: 'E-22', speaker: 'majok', prompt: '"Report people, not households. More kits for us!"',
+          options: [
+            { text: 'No. Kits are per household, and quantities are checked against the caseload.', correct: true },
+            { text: 'Good idea.', why: 'Quantities are checked against caseload and kit. Kits are per household.' }
+          ], explain: 'Honest numbers keep the request clean.', ref: 'SOP §2.1, §4.4' },
+        { id: 'E-23', speaker: 'mabior', prompt: '"Put my relatives from town on your list too."',
+          options: [
+            { text: 'Only households assessed here, validated by the cluster.', correct: true },
+            { text: 'Of course, chief.', critical: 'R5' }
+          ], explain: 'Items go to the households identified in the assessment.', ref: 'AG Art. 3; SOP §4.3' },
+        { id: 'E-24', speaker: 'nyakuoth', prompt: 'Who validates your assessment?',
+          options: [
+            { text: 'The cluster, cross-checking it with the 5W.', correct: true },
+            { text: 'Nobody. It goes straight to the warehouse.', why: 'Needs are validated through the cluster and cross-checked against the 5W.' }
+          ], explain: 'The assessment is attached to the request afterwards.', ref: 'SOP §4.3' },
+        { id: 'E-25', speaker: 'nyakuoth', prompt: 'How soon after the alert should the assessment happen?',
+          options: [
+            { text: 'Within 1 to 5 days.', correct: true },
+            { text: 'Within a month.', why: 'The assessment is done within 1 to 5 days of the trigger.' }
+          ], explain: 'The target is 14 days at most from trigger to delivery.', ref: 'SOP §4.3; §4 (Figure 3)' }
+      ],
+      /* One track-specific question at the end. */
+      trackEvents: {
+        SNFI: { id: 'E-26', speaker: 'nyakuoth', prompt: 'Bamboo and wooden poles are easy to find here. What does that change?',
+          options: [
+            { text: 'The emergency shelter kit comes without bamboo and poles here.', correct: true },
+            { text: 'Request bamboo and poles anyway.', why: 'Bamboo and poles are given only where they are not available locally.' }
+          ], explain: 'Request exactly what is needed.', ref: 'SOP §2.1 (Table 2), §4.10; A5 §7' },
+        WASH: { id: 'E-27', speaker: 'nyakuoth', prompt: 'What must go with your WASH request?',
+          options: [
+            { text: 'The assessment (less than 3 months old) and a project document.', correct: true },
+            { text: 'Only the request form.', why: 'WASH requests need an assessment under 3 months old and a project document.' }
+          ], explain: 'The WASH Cluster may ask for more documents.', ref: 'WS §1, §2' }
+      }
+    },
+
+    /* =========================================================================
+     * MISSION 3: REQUEST BUILDER  (SOP §4.4)
+     * Snap the request together, pick the hub on the map, send it, then follow
+     * it through the review gates.
+     * ======================================================================= */
+    {
+      id: 'M3', number: 3, title: 'Request Builder', place: 'Cluster office', color: '#19A7E0',
+      topic: 'Request and endorsement', host: 'lual', playable: true,
+      intro: 'Your assessment is validated. Build the request like a puzzle, send it, and follow it through the review.',
+      howTo: [
+        'Read the request card at the top.',
+        'Tap a piece below, then the matching slot on the form.',
+        'Tap the right hub on the map, then send.'
+      ],
+      rulesInPlay: [],
+      ref: 'SOP §4.4',
+      hubs: [
+        { id: 'Bor',     covers: 'Jonglei',                                x: 2.0,  z: 1.4 },
+        { id: 'Bentiu',  covers: 'Unity',                                  x: 0.3,  z: -1.6 },
+        { id: 'Malakal', covers: 'Upper Nile',                             x: 2.6,  z: -1.9 },
+        { id: 'Renk',    covers: 'Renk returns and the Sudan crisis',      x: 3.0,  z: -3.4 },
+        { id: 'Wau',     covers: 'Western Bahr el Ghazal',                 x: -2.4, z: 0.0, notTrack: 'WASH' },
+        { id: 'Abyei',   covers: 'Abyei: returns, Sudan crisis, outbreaks', x: -1.6, z: -2.9 },
+        { id: 'Juba',    covers: 'Main hub: consolidation and dispatch',   x: 1.0,  z: 3.3 }
+      ],
+      hubRef: 'SOP §2.2 (Table 3)',
+      scenarios: [
+        { id: 'Q-01', track: 'SNFI', place: 'Bor South, Jonglei', hh: 420, hub: 'Bor', kit: 'SNFI standard kit', assessed: '2 weeks ago' },
+        { id: 'Q-02', track: 'SNFI', place: 'Rubkona, Unity', hh: 300, hub: 'Bentiu', kit: 'Emergency shelter kit', assessed: '10 days ago' },
+        { id: 'Q-03', track: 'SNFI', place: 'Malakal, Upper Nile', hh: 250, hub: 'Malakal', kit: 'SNFI standard kit', assessed: '3 weeks ago' },
+        { id: 'Q-04', track: 'SNFI', place: 'Jur River, Western Bahr el Ghazal', hh: 180, hub: 'Wau', kit: 'SNFI standard kit', assessed: '1 week ago' },
+        { id: 'Q-05', track: 'SNFI', place: 'Abyei town', hh: 150, hub: 'Abyei', kit: 'Emergency shelter kit', assessed: '5 days ago' },
+        { id: 'Q-06', track: 'WASH', place: 'Bor South, Jonglei', hh: 500, hub: 'Bor', kit: 'WASH standard kit', assessed: '2 weeks ago' },
+        { id: 'Q-07', track: 'WASH', place: 'Rubkona, Unity', hh: 350, hub: 'Bentiu', kit: 'WASH standard kit', assessed: '1 week ago' },
+        { id: 'Q-08', track: 'WASH', place: 'Renk, Upper Nile (returnees)', hh: 280, hub: 'Renk', kit: 'WASH standard kit', assessed: '4 days ago' },
+        { id: 'Q-09', track: 'WASH', place: 'Abyei town', hh: 200, hub: 'Abyei', kit: 'WASH standard kit', assessed: '3 weeks ago' },
+        { id: 'Q-10', track: 'WASH', place: 'Malakal, Upper Nile', hh: 240, hub: 'Malakal', kit: 'WASH standard kit', assessed: '10 days ago' }
+      ],
+      /* Form slots. Pieces use {hh}, {people}, {assessed}, {kit}. */
+      slots: [
+        { id: 'form', label: 'Form',
+          pieces: {
+            SNFI: [{ text: 'SNFI Pipeline Request Form, current version', ok: true },
+                   { text: 'CPR Form 2026 (WASH)', why: 'Use your track\'s form: the SNFI Pipeline Request Form.' },
+                   { text: 'Last year\'s request form', why: 'Use the current form version for each request.' }],
+            WASH: [{ text: 'CPR Form 2026, a new copy', ok: true },
+                   { text: 'SNFI Pipeline Request Form', why: 'Use your track\'s form: the CPR Form 2026.' },
+                   { text: 'An old CPR form, reused', why: 'Download the latest CPR form for every new request.' }] },
+          ref: 'SOP §4.4; WS §2' },
+        { id: 'qty', label: 'Items and quantity',
+          pieces: { ALL: [{ text: '{kit}: {hh}, one per household', ok: true },
+                          { text: '{kit}: {people}, one per person', why: 'Quantities are checked against caseload and kit: one kit per household.' }] },
+          ref: 'SOP §2.1, §4.4' },
+        { id: 'att', label: 'Attachment',
+          pieces: {
+            SNFI: [{ text: 'Assessment, {assessed}, validated by the cluster', ok: true },
+                   { text: 'Assessment from 4 months ago', why: 'An assessment is valid for 3 months.' }],
+            WASH: [{ text: 'Assessment ({assessed}) and project document', ok: true },
+                   { text: 'Assessment from 4 months ago', why: 'An assessment must be less than 3 months old.' }] },
+          ref: 'SOP §4.3, §4.4; WS §1' },
+        { id: 'decl', label: 'Reports',
+          pieces: { ALL: [{ text: 'No overdue distribution report for this state', ok: true },
+                          { text: 'One report overdue: send anyway', why: 'A request needs confirmation of no overdue report for the state.' }] },
+          ref: 'SOP §4.2.1, §4.4' },
+        { id: 'fmt', label: 'File',
+          pieces: {
+            SNFI: [{ text: 'Excel file', ok: true },
+                   { text: 'Photo of a printed form', why: 'The form is sent in Excel by email.' }],
+            WASH: [{ text: 'Excel, named SS_WC_CorePipeline_Org_Day_Month_Year', ok: true },
+                   { text: 'PDF file', why: 'Excel only, no PDF, named SS_WC_CorePipeline_Orgname_Day_Month_Year.' }] },
+          ref: 'SOP §4.4; WS §2' },
+        { id: 'send', label: 'Send to',
+          pieces: { ALL: [{ text: 'Email: cluster pipeline mailbox, CP team in copy', ok: true },
+                          { text: 'WhatsApp to the CP officer', why: 'Send the form by email to the cluster pipeline mailbox, CP team in copy.' },
+                          { text: 'Straight to the warehouse', why: 'Requests go through the cluster for endorsement. The warehouse releases only after that.' }] },
+          ref: 'SOP §4.4' }
+      ],
+      gates: [
+        { label: 'CP completeness check', time: '24 hours' },
+        { label: 'State focal point review', time: '48 hours' },
+        { label: 'Cluster national approval', time: '24 hours' }
+      ],
+      gatesRef: 'SOP §4.4',
+      eventsPerRun: 2,
+      events: [
+        { id: 'E-31', speaker: 'lual', prompt: 'Completeness check: one line has the wrong item code.',
+          options: [
+            { text: 'Fix it and reply in the same email chain, quoting the request reference.', correct: true },
+            { text: 'Leave it, the warehouse will sort it out.', why: 'Incomplete requests are returned with the correction needed.' }
+          ], explain: 'About 1 request in 10 carries a wrong item or warehouse.', ref: 'SOP §4.4' },
+        { id: 'E-32', speaker: 'majok', prompt: '"48 hours and the state focal point hasn\'t answered. Let\'s go and collect!"',
+          options: [
+            { text: 'No. Without feedback in 48 hours, the review passes to national level.', correct: true },
+            { text: 'Go, silence means yes.', why: 'Silence moves the request up to national level. It is not endorsement.' }
+          ], explain: 'Stock is released only against an endorsed request.', ref: 'SOP §4.4; A1 Step 1' },
+        { id: 'E-33', speaker: 'nyakuoth', prompt: 'Another donor already funds your organisation to buy some of these items.',
+          options: [
+            { text: 'Disclose it in the request. Allocation takes it into account.', correct: true },
+            { text: 'Keep quiet and get both.', why: 'A partner already funded for the same items discloses it at review.' }
+          ], explain: 'Avoids duplication and stretches limited stock.', ref: 'SOP §4.4' },
+        { id: 'E-34', speaker: 'lual', prompt: 'After endorsement, more households arrive at the site.',
+          options: [
+            { text: 'Justify the change in writing to the cluster, CP team in copy, within 24 hours and before activities start.', correct: true },
+            { text: 'Just collect more kits at the warehouse.', why: 'Changes of location or caseload after endorsement are justified in writing first.' }
+          ], explain: 'The endorsed request is what the warehouse releases.', ref: 'SOP §4.4' },
+        { id: 'E-35', speaker: 'lual', prompt: 'Your request is approved. What happens next?',
+          options: [
+            { text: 'The CP team confirms availability within 72 hours, then I book the collection.', correct: true },
+            { text: 'I can collect today without notice.', why: 'Availability is confirmed within 72 hours; collection is confirmed at least 24 hours ahead.' }
+          ], explain: 'Release follows within 3 working days.', ref: 'SOP §4.5, §4.5.1' }
+      ]
+    },
+    /* =========================================================================
+     * MISSION 4: WAREHOUSE PICKUP  (SOP §4.5)
+     * Book the collection, drive in, check the load and the kit, sign the
+     * issuance form: the truck becomes yours.
+     * ======================================================================= */
+    {
+      id: 'M4', number: 4, title: 'Warehouse Pickup', place: 'IOM hub', color: '#0033A0',
+      topic: 'Collection', host: 'deng', playable: true,
+      intro: 'Your request is endorsed and the stock is confirmed. Book the collection, drive in, check the load, and sign for it.',
+      howTo: [
+        'Tap a day on the calendar to book the collection.',
+        'Tap the damaged cartons, then check the kit.',
+        'Sign the right document: the truck becomes yours.'
+      ],
+      rulesInPlay: ['R5'],
+      book: {
+        prompt: 'It is Monday morning. Stock is confirmed and approved stock is held 15 days. When will you collect?',
+        days: 20, hold: 15,
+        tooSoon: { why: 'Confirm the collection at least 24 hours ahead. Without notice the warehouse may refuse release.', ref: 'SOP §4.5.1' },
+        tooLate: { why: 'Approved stock is held 15 days. Uncollected lines then return to available stock for other partners.', ref: 'SOP §4.5.1, §4.10' },
+        ok: { why: 'Booked at least 24 hours ahead, within the 15-day hold.', ref: 'SOP §4.5.1' }
+      },
+      inspect: {
+        cartons: 10, damaged: 3,
+        ok: { why: 'At collection you check quantity and condition before you sign.', ref: 'SOP §4.5.1; §7.2 (Quality)' },
+        missed: { why: 'A damaged carton was missed. Check condition before you sign: after signature it is yours.', ref: 'SOP §4.5.1' },
+        good: { why: 'That carton is fine. Look for torn or wet ones.', ref: 'SOP §4.5.1' }
+      },
+      kitCheck: {
+        prompt: 'Open one kit. Which item does not belong in it?',
+        intruders: {
+          SNFI: ['1 bucket with tap', '1 filter cloth', '290 water purification tablets', '2 bars of soap'],
+          WASH: ['2 blankets', '1 kitchen set', '1 solar lamp', '2 plastic sheets 4x6m']
+        },
+        ok: { why: 'Kit contents are set by the clusters. A wrong item is raised before signing.', ref: 'SOP §2.1 (Table 2); §7.2 (Quality)' },
+        bad: { why: 'That item belongs in this kit. Check the list again.', ref: 'SOP §2.1 (Table 2)' }
+      },
+      sign: { id: 'S-41', speaker: 'deng', prompt: 'Everything is checked. Which document do you sign?',
+        options: [
+          { text: 'The issuance form: signed by both of us, stamped and dated. I keep a copy.', correct: true },
+          { text: 'A waybill.', why: 'Waybills are for transfers between IOM locations. A release to a partner uses an issuance form.' }
+        ], explain: 'Responsibility transfers to you at signature.', ref: 'SOP §4.5.1, §4.5.2 (Table 11)' },
+      handover: { why: 'Signed: the kits are now yours to transport, keep safe and insure until distribution.', ref: 'SOP §4.5.1, §4.6.2; AG Art. 2' },
+      eventsPerRun: 2,
+      events: [
+        { id: 'E-41', speaker: 'majok', prompt: '"We\'re late! Skip the checks and just sign."',
+          options: [
+            { text: 'No. Check quantity and condition first, then sign.', correct: true },
+            { text: 'Fine, sign quickly.', why: 'At collection the partner checks quantity and condition, then signs.' }
+          ], explain: 'Once signed, any problem is yours.', ref: 'SOP §4.5.1' },
+        { id: 'E-42', speaker: 'majok', prompt: '"Load a few extra kits. Nobody will notice."',
+          options: [
+            { text: 'No. Only the approved quantity, for the assessed households.', correct: true },
+            { text: 'Good idea.', critical: 'R5' }
+          ], explain: 'Items go only to the households identified in the assessment.', ref: 'AG Art. 3; SOP §4.2.3' },
+        { id: 'E-43', speaker: 'deng', prompt: 'Who takes the kits from here to your site?',
+          options: [
+            { text: 'We do. Transport from the warehouse is ours, funded by our donors.', correct: true },
+            { text: 'IOM drives them to our site.', why: 'Partners hold full responsibility for last-mile transport.' }
+          ], explain: 'The Logistics Cluster can support with common services.', ref: 'SOP §4.5.3, §4.2.1' },
+        { id: 'E-44', speaker: 'majok', prompt: '"Insurance? IOM insures the kits until we hand them out, right?"',
+          options: [
+            { text: 'No. We insure the items from collection until distribution.', correct: true },
+            { text: 'Yes, IOM covers it.', why: 'IOM does not insure CP items after release.' }
+          ], explain: 'Insurance of items in custody is part of eligibility.', ref: 'SOP §4.6.2, §4.2.1' },
+        { id: 'E-45', speaker: 'deng', prompt: 'Your truck is small. Take half now and the rest next month?',
+          options: [
+            { text: 'No. We collect everything within the 15-day hold.', correct: true },
+            { text: 'Yes, next month is fine.', why: 'Approved stock is held 15 days, then uncollected lines return to available stock.' }
+          ], explain: 'Plan transport so you can collect in time.', ref: 'SOP §4.5.1, §4.10' }
+      ]
+    },
+
+    /* =========================================================================
+     * MISSION 5: ROAD TO THE SITE  (SOP §4.5.3, §4.6.1, §4.6.2)
+     * Drive the kits to the site: steer around mud and rocks, and make the
+     * right call at each stop.
+     * ======================================================================= */
+    {
+      id: 'M5', number: 5, title: 'Road to the Site', place: 'River road', color: '#8B5E34',
+      topic: 'Transport and loss reporting', host: 'majok', playable: true,
+      intro: 'The kits are yours now. Drive them safely to the distribution site. Steer around mud and rocks, and make the right call when trouble comes.',
+      howTo: [
+        'Swipe left or right, tap the arrows, or use the arrow keys to change lane.',
+        'Avoid mud and rocks.',
+        'When the truck stops, make the call.'
+      ],
+      rulesInPlay: ['R3', 'R5'],
+      drive: { seconds: 36 },
+      first: { id: 'E-51', speaker: 'nyakuoth', prompt: 'Before you leave: who clears the movement and the distribution?',
+        options: [
+          { text: 'The RRC (Relief and Rehabilitation Commission), at state and county level.', correct: true },
+          { text: 'Nobody, we just go.', why: 'The RRC gives government clearance for movement and distribution.' }
+        ], explain: 'Clearance comes before distribution.', ref: 'SOP §3.1 (Table 4)' },
+      eventsPerRun: 3,
+      events: [
+        { id: 'E-52', speaker: 'majok', prompt: 'The road ahead is cut by water. Can anyone help move the kits by river?',
+          options: [
+            { text: 'Ask the Logistics Cluster: it supports partners\' last-mile transport.', correct: true },
+            { text: 'Call IOM to deliver them for us.', why: 'Partners hold full responsibility for last-mile transport.' }
+          ], explain: 'The Logistics Cluster supports partners, not CP prepositioning.', ref: 'SOP §3.1, §4.5.3' },
+        { id: 'E-53', speaker: 'majok', prompt: 'A trader offers good cash for ten kits.',
+          options: [
+            { text: 'No sale, ever. The kits go to the assessed households.', correct: true },
+            { text: 'Sell ten, we have plenty.', critical: 'R5' }
+          ], explain: 'Selling kits is diversion.', ref: 'AG Art. 3; SOP §4.2.3' },
+        { id: 'E-54', speaker: 'majok', prompt: 'At a checkpoint, a man wants a few kits to let you pass.',
+          options: [
+            { text: 'Refuse. Kits go only to the assessed households.', correct: true },
+            { text: 'Give him a few, it is easier.', critical: 'R5' }
+          ], explain: 'If items are taken anyway, report it within 24 hours.', ref: 'AG Art. 3; SOP §4.6.2' },
+        { id: 'E-55', speaker: 'majok', prompt: 'At night, thieves take kits from the truck.',
+          options: [
+            { text: 'Report it to the CP team and the cluster within 24 hours, on the Loss and Damage form, with a police report.', correct: true },
+            { text: 'Mention it in next month\'s distribution report.', critical: 'R3' }
+          ], explain: 'The 24-hour clock starts when you become aware.', ref: 'SOP §4.6.2' },
+        { id: 'E-56', speaker: 'majok', prompt: 'Heavy rain soaks some cartons. Some items are ruined.',
+          options: [
+            { text: 'Report the damage within 24 hours on the Loss and Damage form.', correct: true },
+            { text: 'Hide the damaged ones and say nothing.', critical: 'R3' }
+          ], explain: 'Loss and damage both follow the 24-hour route.', ref: 'SOP §4.6.2' },
+        { id: 'E-57', speaker: 'nyakuoth', prompt: 'Fighting closes the road to the site. Distribute in the next village instead?',
+          options: [
+            { text: 'Only with a written justification, agreed with the cluster first, CP team informed.', correct: true },
+            { text: 'Yes, go there now.', why: 'Changes of site are justified in writing and agreed with the cluster before implementation.' }
+          ], explain: 'The change is also reported in the distribution report.', ref: 'SOP §4.6.1' },
+        { id: 'E-58', speaker: 'majok', prompt: '"Let\'s keep some kits in our store for the next project."',
+          options: [
+            { text: 'No. Released kits cannot be kept or repurposed without written agreement.', correct: true },
+            { text: 'Good idea.', why: 'Items released but not distributed cannot be retained, repurposed or moved without written agreement.' }
+          ], explain: 'The CP team and the cluster decide what happens to them.', ref: 'SOP §4.10' },
+        { id: 'E-59', speaker: 'majok', prompt: '"Let\'s rest a week before we distribute."',
+          options: [
+            { text: 'No. We distribute within 1 to 5 days of collection.', correct: true },
+            { text: 'Sure, we earned it.', why: 'Distribution happens within 1 to 5 days of collection.' }
+          ], explain: 'Kits waiting in a truck or store are at risk.', ref: 'SOP §4.6' }
+      ],
+      obstacles: { avoidPoints: 20, hitSlow: 1.4 }
+    },
 
     /* =========================================================================
      * MISSION 6: DISTRIBUTION DAY
@@ -576,10 +984,10 @@ window.CONTENT = {
 
       /* Phase 3: the rush. Seconds are at normal pace. */
       rush: {
-        seconds: 95,
-        spawnEvery: 3.6,          // a new arrival every ... seconds
-        patience: 16,             // seconds a person waits for you before leaving
-        doorToDoorEvery: 24,      // a household that cannot reach the site calls for help
+        seconds: 25,              // a short, busy rush (event calls pause the clock)
+        spawnEvery: 1.7,          // a new arrival every ... seconds
+        patience: 11,             // seconds a person waits for you before leaving
+        doorToDoorEvery: 9,       // a household that cannot reach the site calls for help
         mix: { register: 0.6, complaint: 0.13, faint: 0.11, notListed: 0.16 }
       },
       routing: {
@@ -593,7 +1001,7 @@ window.CONTENT = {
       },
 
       /* Event calls during the rush. {demo}, {cluster} and {kit} follow the track. */
-      eventsPerRun: 4,
+      eventsPerRun: 2,
       events: [
         { id: 'E-01', speaker: 'majok', prompt: '"My cousin\'s family missed registration. Just add them to the list, it\'s one family."',
           options: [
@@ -680,7 +1088,126 @@ window.CONTENT = {
       ]
     },
 
-    { id: 'M7', number: 7, title: 'Report Back', place: 'Your office', color: '#D6246E', topic: 'Reporting, PDM and compliance', playable: false }
+    /* =========================================================================
+     * MISSION 7: REPORT BACK  (SOP §4.7, §4.8, §4.2.3) + the final emergency
+     * ======================================================================= */
+    {
+      id: 'M7', number: 7, title: 'Report Back', place: 'Your office', color: '#D6246E',
+      topic: 'Reporting, PDM and compliance', host: 'lual', playable: true,
+      intro: 'The distribution is done. Report on time for your track, update the 5W, welcome monitoring, then lead one last emergency.',
+      howTo: [
+        'Tap the right pieces into the report before the deadline.',
+        'Answer the calls.',
+        'Finish the emergency: every rule counts.'
+      ],
+      rulesInPlay: ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8'],
+      report: {
+        ref: 'SOP §4.7',
+        pieces: [
+          { id: 'P-01', text: 'Signed beneficiary list', good: true },
+          { id: 'P-02', text: 'Items distributed, by location', good: true },
+          { id: 'P-03', text: 'Results and difficulties', good: true },
+          { id: 'P-04', text: 'Any loss or damage', good: true },
+          { id: 'P-05', text: 'Photos, with signed consent', good: true },
+          { id: 'P-06', text: 'Training on item use: attendance by sex, age and disability', good: true },
+          { id: 'P-11', text: 'Estimated numbers, no list', why: 'The report rests on the signed beneficiary list, not estimates.', ref: 'SOP §4.7; A2 §4' },
+          { id: 'P-12', text: 'Photos taken without consent', why: 'Images of people require signed consent.', ref: 'SOP §4.6 (Visibility), §4.7' },
+          { id: 'P-13', text: 'Names added after the distribution', critical: 'R6', why: 'No name is added to the beneficiary list without IOM written consent.', ref: 'AG Art. 3' },
+          { id: 'P-14', text: 'Beneficiary phone list for a trader', critical: 'R8', why: 'Beneficiary data is shared only on a need-to-know basis.', ref: 'AG Art. 3; A6' }
+        ],
+        badPerRun: 2,
+        late: { why: 'The report was late. Late reports trigger a reminder, then a hold on new requests for that state.', ref: 'SOP §4.7, §4.2.3' },
+        onTime: { why: 'On time, with the signed list, photos with consent and training attendance.', ref: 'SOP §4.7' }
+      },
+      callsPerRun: 3,
+      firstCall: { id: 'K-01', speaker: 'lual', prompt: 'IOM asks for the beneficiary data. How do you send it?',
+        options: [
+          { text: 'An encrypted, password-protected Excel file by email; the password by another channel.', correct: true },
+          { text: 'A plain list in a WhatsApp group.', critical: 'R8' }
+        ], explain: 'Need-to-know, confidential, secure.', ref: 'AG Art. 3; A6' },
+      calls: [
+        { id: 'K-02', speaker: 'nyakuoth', prompt: 'The month ends. What about the 5W?',
+          options: [
+            { text: 'Update it by month end, CP team in copy.', correct: true },
+            { text: 'Skip it, the report is enough.', why: 'The partner updates the 5W by month end, CP team in copy.' }
+          ], explain: 'The 5W shows who is doing what, where.', ref: 'SOP §4.7; A1 Step 4' },
+        { id: 'K-03', speaker: 'lual', prompt: 'The CP team arrives for a monitoring visit, without notice.',
+          options: [
+            { text: 'Welcome them and share our records.', correct: true },
+            { text: 'Ask them to come back after giving notice.', why: 'Site visits can happen at any time, and spot checks can be unannounced.' }
+          ], explain: 'Records are available on request.', ref: 'AG Art. 5; WS §5; SOP §7' },
+        { id: 'K-04', speaker: 'lual', prompt: 'How long do you keep the distribution records?',
+          options: [
+            { text: 'Seven years after the agreement ends.', correct: true },
+            { text: 'Until the report is sent.', why: 'Records are kept for 7 years after termination.' }
+          ], explain: 'The CP is donor funded and subject to audit.', ref: 'AG Art. 5; SOP §7' },
+        { id: 'K-05', speaker: 'nyakuoth', prompt: 'A partner keeps missing its reports. What happens?',
+          options: [
+            { text: 'A reminder, then a hold on new requests for that state, then suspension.', correct: true },
+            { text: 'Nothing, reports are optional.', why: 'The compliance ladder: reminder, hold, suspension, de-registration.' }
+          ], explain: 'Reporting is mandatory.', ref: 'SOP §4.2.3' },
+        { id: 'K-06', speaker: 'lual', prompt: 'A suspended partner wants to come back. What is needed?',
+          options: [
+            { text: 'Meet the obligation, agree a corrective action plan, get written confirmation from the CP Manager.', correct: true },
+            { text: 'Just send a new request.', why: 'Reinstatement needs the obligation met, a corrective action plan and written confirmation.' }
+          ], explain: 'The path back is clear and written.', ref: 'SOP §4.2.3' }
+      ],
+      pdmCall: {
+        SNFI: { id: 'K-07', speaker: 'lual', prompt: 'Who does post-distribution monitoring (PDM)?',
+          options: [
+            { text: 'We monitor our whole distribution; the CP team also checks a sample, on the items.', correct: true },
+            { text: 'Only IOM does PDM.', why: 'Two PDMs: the partner\'s on the whole process, and the CP team\'s on a sample of distributions.' }
+          ], explain: 'PDM runs 2 weeks to 4 months after the distribution.', ref: 'SOP §4.8' },
+        WASH: { id: 'K-08', speaker: 'lual', prompt: 'When is your WASH PDM due?',
+          options: [
+            { text: 'Within 2 months of the distribution, to the WASH Cluster and the CP team, quoting the CPR reference.', correct: true },
+            { text: 'Only if IOM asks.', why: 'WASH partners run PDM within 2 months and share it.' }
+          ], explain: 'The CP team may also run its own PDM on a sample.', ref: 'WS §5; SOP §4.8' }
+      },
+      /* The final emergency: one scenario per run. A wrong (non-critical)
+       * answer can lead to a consequence node. next: null ends the scenario. */
+      finales: [
+        { id: 'F-A', title: 'Floods near Bor', start: 'a1', nodes: {
+          a1: { speaker: 'nyakuoth', text: 'Floods displace families near Bor. Your organisation is onboarded. What comes first?', ref: 'SOP §4.3',
+                options: [{ text: 'Assess the needs within 1 to 5 days, with the cluster.', correct: true, next: 'a2' },
+                          { text: 'Go to the warehouse and ask for kits today.', why: 'Stock is released only against an endorsed request, based on a validated assessment.', next: 'a1b' }] },
+          a1b: { speaker: 'deng', text: 'The warehouse turns you away: no endorsed request. What now?', ref: 'SOP §4.4, §4.5',
+                options: [{ text: 'Assess, then request through the cluster.', correct: true, next: 'a2' },
+                          { text: 'Insist until they give in.', why: 'The endorsed request is the only route to release.', next: 'a2' }] },
+          a2: { speaker: 'lual', text: 'You request kits for the flooded area. Which hub?', ref: 'SOP §2.2 (Table 3)',
+                options: [{ text: 'Bor: it covers Jonglei.', correct: true, next: 'a3' }, { text: 'Wau.', why: 'Wau covers Western Bahr el Ghazal. Bor covers Jonglei.', next: 'a3' }, { text: 'Juba.', why: 'Bor is the hub for Jonglei.', next: 'a3' }] },
+          a3: { speaker: 'majok', text: 'On the boat, water ruins some kits.', ref: 'SOP §4.6.2',
+                options: [{ text: 'Report within 24 hours on the Loss and Damage form.', correct: true, next: 'a4' }, { text: 'Mention it in the final report.', critical: 'R3' }] },
+          a4: { speaker: 'ayen', text: 'At the site, a woman says a staff member asked for sex in exchange for her kit.', ref: 'SOP §7.2, §7.3; IN/234',
+                options: [{ text: 'Report it immediately through IOM PSEA channels.', correct: true, next: 'a5' }, { text: 'Log it for the monthly analysis.', critical: 'R4' }] },
+          a5: { speaker: 'nyakuoth', text: 'The distribution is done. When is your report due?', ref: 'AG Art. 6; SOP §4.7',
+                options: [{ text: 'Within {deadline}, on the {report}.', correct: true, next: null }, { text: 'When we find the time.', why: 'Your track\'s deadline is {deadline}.', next: null }] } } },
+        { id: 'F-B', title: 'Returns in Renk', start: 'b1', nodes: {
+          b1: { speaker: 'majok', text: 'Returnees arrive in Renk. "River Aid can request and distribute for us!"', ref: 'SOP §4.2.1',
+                options: [{ text: 'No. We request and distribute ourselves.', correct: true, next: 'b2' }, { text: 'Great, less work.', critical: 'R7' }] },
+          b2: { speaker: 'nyakuoth', text: 'Your assessment of the area is 4 months old.', ref: 'SOP §4.3',
+                options: [{ text: 'Do a new one: an assessment is valid for 3 months.', correct: true, next: 'b3' }, { text: 'Use it anyway.', why: 'An assessment is valid for 3 months.', next: 'b2b' }] },
+          b2b: { speaker: 'lual', text: 'The CP team returns your request: the assessment has expired. What now?', ref: 'SOP §4.4',
+                options: [{ text: 'Do a new assessment and resend, quoting the reference.', correct: true, next: 'b3' }, { text: 'Complain and wait.', why: 'Incomplete requests come back with the correction needed.', next: 'b3' }] },
+          b3: { speaker: 'lual', text: 'The state focal point has not answered for 48 hours.', ref: 'SOP §4.4',
+                options: [{ text: 'The review passes to national level. We wait for approval.', correct: true, next: 'b4' }, { text: 'Silence means yes: go and collect.', why: 'Silence moves the request up. It is not endorsement.', next: 'b4' }] },
+          b4: { speaker: 'mabior', text: '"Ask each family for a small fee for transport."', ref: 'SOP §1, §7.2',
+                options: [{ text: 'No. The distribution is free.', correct: true, next: 'b5' }, { text: 'A small fee is fine.', critical: 'R1' }] },
+          b5: { speaker: 'majok', text: '"Three late families: add them to the signed list."', ref: 'AG Art. 3',
+                options: [{ text: 'Not without IOM written consent.', correct: true, next: null }, { text: 'Add them.', critical: 'R6' }] } } },
+        { id: 'F-C', title: 'A rush week', start: 'c1', nodes: {
+          c1: { speaker: 'deng', text: 'At collection, someone hands you a waybill to sign.', ref: 'SOP §4.5.2',
+                options: [{ text: 'Releases to partners use the issuance form.', correct: true, next: 'c2' }, { text: 'Sign the waybill.', why: 'Waybills are for transfers between IOM locations.', next: 'c2' }] },
+          c2: { speaker: 'majok', text: 'A trader offers cash for "spare" kits.', ref: 'AG Art. 3; SOP §4.2.3',
+                options: [{ text: 'No sale: the kits go to assessed households.', correct: true, next: 'c3' }, { text: 'Sell the spares.', critical: 'R5' }] },
+          c3: { speaker: 'ayen', text: 'A photographer wants pictures of children for the donor.', ref: 'SOP §4.6; A7',
+                options: [{ text: 'Only with signed consent. If a child says no, no photo.', correct: true, next: 'c4' }, { text: 'Children are fine without consent.', critical: 'R8' }] },
+          c4: { speaker: 'nyakuoth', text: 'The road to the site is blocked. Move the distribution?', ref: 'SOP §4.6.1',
+                options: [{ text: 'Justify it in writing, agree with the cluster first, inform the CP team.', correct: true, next: 'c5' }, { text: 'Move now, explain later.', why: 'Changes are agreed with the cluster before implementation.', next: 'c5' }] },
+          c5: { speaker: 'lual', text: 'Your report is overdue and a reminder arrives.', ref: 'SOP §4.2.3',
+                options: [{ text: 'Send it now: otherwise new requests for the state go on hold.', correct: true, next: null }, { text: 'Ignore the reminder.', why: 'Next comes a hold on new requests for that state.', next: null }] } } }
+      ]
+    }
   ]
 };
 </script>
@@ -5251,13 +5778,15 @@ function journeyLayout() {
   return { stops: stops, road: road, span: span, compound: compound,
            bounds: { minX: -span / 2 - 5, maxX: span / 2 + 2.5, minZ: -6.5, maxZ: 6.5, maxY: 2.5 } };
 }
+/* A mission is playable when CONTENT says so and its code is in the build. */
+function isPlayable(M) { return !!M && M.playable !== false && !!Missions[M.id]; }
 function isUnlocked(i) {
   var d = Store.get(), M = C.missions[i];
   if (!M) return false;
-  if (M.playable === false) return false;
+  if (!isPlayable(M)) return false;
   if (d.allDoneOnce || i === 0) return true;
   /* the first playable mission is always open; then missions open in order */
-  for (var k = 0; k < i; k++) { var P = C.missions[k]; if (P.playable !== false && !(d.missions[P.id] && d.missions[P.id].completed)) return false; }
+  for (var k = 0; k < i; k++) { var P = C.missions[k]; if (isPlayable(P) && !(d.missions[P.id] && d.missions[P.id].completed)) return false; }
   return true;
 }
 
@@ -5427,6 +5956,8 @@ var ctx = {
       later(function () { endMission('out'); }, 1300);
     }
   },
+  /* Points that do not count as a move (e.g. a clean drive past a pothole). */
+  bonus: function (points, at) { if (!run || run.ended) return; run.score += points; renderHUD(); if (at) floater(at.x, at.y, '+' + points); Sound.pop(); },
   finish: function () { if (run && !run.ended) endMission('completed'); },
   onCritical: null       // mission may set a function(focus) to animate its camera
 };
@@ -5473,7 +6004,7 @@ function endMission(status) {
   if (status === 'critical') d.anyCritical = true;          // tracks ALL attempts, not only the last one
   d.missions[M.id] = mr;
   d.bestStreak = Math.max(d.bestStreak || 0, run.maxStreak);
-  var playable = C.missions.filter(function (x) { return x.playable !== false; });
+  var playable = C.missions.filter(isPlayable);
   if (playable.length && playable.every(function (x) { return d.missions[x.id] && d.missions[x.id].completed; })) d.allDoneOnce = true;
   d.attempts.push(rec); if (d.attempts.length > 200) d.attempts = d.attempts.slice(-200);
   var newBadges = updateBadges(), newUnlocks = updateUnlocks();
@@ -5483,7 +6014,7 @@ function endMission(status) {
 
 function ruleMet(rule) {
   var d = Store.get(), parts = String(rule).split(':'), kind = parts[0], arg = parts[1], m = arg ? d.missions[arg] : null;
-  var playable = C.missions.filter(function (x) { return x.playable !== false; });
+  var playable = C.missions.filter(isPlayable);
   switch (kind) {
     case 'start': return true;
     case 'missionDone': return !!(m && m.completed);
@@ -5501,6 +6032,590 @@ function groupRefs(mistakes) {
   var m = {}; mistakes.forEach(function (x) { var k = x.ref || 'General'; m[k] = (m[k] || 0) + 1; });
   return Object.keys(m).map(function (k) { return { ref: k, count: m[k] }; }).sort(function (a, b) { return b.count - a.count; });
 }
+
+/* =============================================================================
+ * 40 MISSION KIT: shared building blocks for missions
+ *   Kit.view(opts)          3D/2D view with camera tween (v.camTo)
+ *   Kit.taps(v, items, ...) taps on the world (people, objects, ground)
+ *   Kit.say / Kit.choice    the bottom speech card and event calls
+ *   Kit.bubble / Kit.tag    HTML labels that follow world points
+ *   Kit.walker              the player character: tap the ground to walk
+ * ========================================================================== */
+var Kit = {};
+
+/* A mission view: outdoor scene, camera, tween, fitting above the dock. */
+Kit.view = function (opts) {
+  opts = opts || {};
+  var gl = GFX.mode === 'webgl';
+  var v = { gl: gl, bounds: opts.bounds, fit: { elev: opts.elev || 52, azim: opts.azim || 0, rotatePortrait: opts.rotatePortrait !== false,
+            top: function (W) { return W < 760 ? 100 : 108; }, bottom: function () { var d = $('#dock'); return d ? d.offsetHeight + 8 : 20; }, side: 6, zoom: opts.zoom || 1 } };
+  var tween = null;
+  if (gl) {
+    v.scene = makeOutdoorScene(opts.sky || '#CDE8F6');
+    v.camera = new THREE.PerspectiveCamera(opts.fov || 36, 1, 0.1, 400);
+    v.onQuality = function (q) { v.scene.userData.sun.castShadow = q === 'high'; };
+  }
+  v.camTo = function (bounds, dur) {
+    if (!gl || !v.camera.userData.placed || reduceMotion || !dur) { v.bounds = bounds; GFX.refit(); if (gl) v.camera.userData.placed = true; return; }
+    var fromP = v.camera.position.clone(), fromT = v.camTarget.clone();
+    v.bounds = bounds; GFX.refit();
+    tween = { t: 0, d: dur, fromP: fromP, toP: v.camera.position.clone(), fromT: fromT, toT: v.camTarget.clone() };
+    v.camera.position.copy(fromP); v.camera.lookAt(fromT);
+  };
+  v.onFit = function () { if (tween) { tween.toP = v.camera.position.clone(); tween.toT = v.camTarget.clone(); } };
+  v.tween = function (dt) {
+    if (!tween) return;
+    tween.t += dt; var k = clamp(tween.t / tween.d, 0, 1), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    v.camera.position.lerpVectors(tween.fromP, tween.toP, e); v.camera.lookAt(tween.fromT.clone().lerp(tween.toT, e));
+    if (k >= 1) tween = null;
+  };
+  v.focusCritical = function (f) { if (f) v.camTo({ minX: f[0] - 3, maxX: f[0] + 3, minZ: f[2] - 2.4, maxZ: f[2] + 2.4, maxY: 2 }, 0.7); };
+  v.disposers = [];
+  v.dispose = function () {
+    v.disposers.forEach(function (f) { try { f(); } catch (e) {} });
+    if (v.scene) v.scene.traverse(function (o) { if (o.geometry) o.geometry.dispose(); if (o.material && o.material !== M3.material()) { if (o.material.dispose) o.material.dispose(); } });
+  };
+  /* Register now, so labels the mission adds next are not cleared. */
+  GFX.setView(v);
+  return v;
+};
+/* Start a view: register it with GFX and with the critical-rule camera. */
+Kit.start = function (v, ctx) {
+  if (v.gl) v.camera.userData.placed = false;
+  v.camTo(v.bounds, 0);
+  ctx.onCritical = v.focusCritical;
+  v.disposers.push(function () { ctx.onCritical = null; });
+};
+
+/* Taps on the world. items(): [{x, z, r, h, ...}] ; onHit(item) ; onGround({x,z}) */
+Kit.taps = function (v, items, onHit, onGround) {
+  var down = null, canvas = GFX.canvas;
+  function d(e) { down = { x: e.clientX, y: e.clientY }; }
+  function u(e) {
+    if (!down) return; var dx = e.clientX - down.x, dy = e.clientY - down.y; down = null;
+    if (dx * dx + dy * dy > 144 || ctx.busy) return;
+    var hit = GFX.pickNearest(e.clientX, e.clientY, items());
+    if (hit) { onHit(hit); return; }
+    if (onGround) { var g = GFX.toGround(e.clientX, e.clientY, 0); if (g) onGround(g); }
+  }
+  canvas.addEventListener('pointerdown', d); canvas.addEventListener('pointerup', u);
+  v.disposers.push(function () { canvas.removeEventListener('pointerdown', d); canvas.removeEventListener('pointerup', u); });
+};
+
+/* Bottom speech card. extra = HTML below the speech (buttons, chips...). */
+Kit.say = function (charId, html, extra) {
+  var dock = ctx.dock(); if (!dock) return null;
+  dock.innerHTML = '<div class="dock-inner">' + (charId ? sayHTML(charId, html) : '<div class="what">' + html + '</div>') + (extra || '') + '</div>';
+  GFX.refit();
+  return dock.firstChild;
+};
+/* A row of action buttons for the dock: [{id, text, cls}] */
+Kit.buttons = function (list) {
+  return '<div class="actions" style="justify-content:center;margin-top:8px">' + list.map(function (b) { return '<button class="btn ' + (b.cls || 'mc') + '" type="button" id="' + b.id + '">' + esc(b.text) + '</button>'; }).join('') + '</div>';
+};
+
+/* An event call: speaker, prompt, options. Scores it and calls done(ok).
+ * E: { id, speaker, prompt, options:[{text, correct, critical, why}], explain, ref }
+ * o: { pos:[x,z] where the "!" shows, after: ms before done (default 1100) } */
+Kit.choice = function (E, o) {
+  o = o || {};
+  var opts = shuffle(E.options), speaker = E.speaker || 'majok', mark = null;
+  if (o.pos) { mark = GFX.addLabel(el('<span class="bub" style="--bc:#F5B301;pointer-events:none"><b style="color:#14213D;font-size:22px">!</b></span>'), function () { return [o.pos[0], o.h || 2.4, o.pos[1]]; }); }
+  if (run) run.debug.cur = E;
+  Sound.alarm();
+  Kit.say(speaker, fmt(E.prompt, true), '<div class="options" id="ev-opts">' + opts.map(function (op, i) { return '<button class="opt" type="button" data-i="' + E.options.indexOf(op) + '"><span class="k">' + letter(i) + '</span><span>' + fmt(op.text, true) + '</span></button>'; }).join('') + '</div>');
+  $$('#ev-opts .opt').forEach(function (b) {
+    b.onclick = function () {
+      if (!run || run.ended || run.paused || modalOpen()) return;
+      var op = E.options[Number(b.getAttribute('data-i'))], r = b.getBoundingClientRect(), at = { x: r.left + 40, y: r.top };
+      $$('#ev-opts .opt').forEach(function (x) { x.disabled = true; if (E.options[Number(x.getAttribute('data-i'))].correct) x.classList.add('right'); else if (x === b) x.classList.add('wrong'); });
+      if (mark) GFX.removeLabel(mark);
+      if (op.critical) { ctx.answer({ correct: false, critical: op.critical, id: E.id, ref: E.ref, why: E.explain, at: at, focus: o.pos ? [o.pos[0], 1, o.pos[1]] : null }); return; }
+      ctx.answer({ correct: !!op.correct, id: E.id, ref: E.ref, title: op.correct ? 'Good call' : 'Not quite', why: op.correct ? E.explain : (op.why || E.explain), at: at });
+      later(function () { if (run && !run.ended && o.done) o.done(!!op.correct, op); }, o.after != null ? o.after : 1100);
+    };
+  });
+};
+/* Run a list of event calls one after another, then call done(). */
+Kit.choices = function (list, pos, done) {
+  var i = 0;
+  (function next() { if (!run || run.ended) return; if (i >= list.length) return done(); Kit.choice(list[i++], { pos: pos, done: next }); })();
+};
+
+/* A round button that follows a world point. opts: { ring: true, sep: true, h } */
+Kit.bubble = function (iconName, color, label, pos, onTap, opts) {
+  opts = opts || {};
+  var b = el('<button class="bub" type="button" aria-label="' + esc(label) + '" style="--bc:' + color + '">' + icon(iconName, '#fff', 'class="ic"') +
+    (opts.ring ? '<svg class="ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3"/><circle class="pc" cx="18" cy="18" r="16" fill="none" stroke="#F5B301" stroke-width="3.4" stroke-dasharray="100.5" stroke-dashoffset="0" stroke-linecap="round"/></svg>' : '') + '</button>');
+  b.onclick = function (e) { e.stopPropagation(); if (!ctx.busy) onTap(); };
+  var L = GFX.addLabel(b, typeof pos === 'function' ? pos : function () { return pos; }, { sep: opts.sep !== false });
+  L.ring = function (f) { var c = b.querySelector('.pc'); if (c) { c.setAttribute('stroke-dashoffset', String(Math.round((1 - clamp(f, 0, 1)) * 100.5))); c.setAttribute('stroke', f < 0.3 ? '#E5484D' : '#F5B301'); } };
+  return L;
+};
+/* A text tag that follows a world point (optionally tappable). */
+Kit.tag = function (text, pos, onTap, cls, opts) {
+  var n = el('<' + (onTap ? 'button type="button"' : 'span') + ' class="lbl' + (onTap ? ' tap' : '') + (cls ? ' ' + cls : '') + '">' + text + '</' + (onTap ? 'button' : 'span') + '>');
+  if (onTap) n.onclick = function (e) { e.stopPropagation(); if (!ctx.busy) onTap(); };
+  return GFX.addLabel(n, typeof pos === 'function' ? pos : function () { return pos; }, opts);
+};
+
+/* The player character. Tap the ground to walk; arrows/WASD also work. */
+Kit.walker = function (v, x, z, opts) {
+  opts = opts || {};
+  var w = { x: x, z: z, face: 0, path: [], onArrive: null, speed: opts.speed || 3.4, obj: null, bounds: opts.bounds };
+  if (v.gl) {
+    w.obj = M3.person({ skin: '#6B4226', shirt: Store.get().truckColor || C.ngo.color, hair: 'short', scarf: '#F5B301' });
+    w.obj.position.set(x, 0, z); v.scene.add(w.obj);
+    var ring = new THREE.Mesh(M3.G.ring(0.42, 0.55, 24), new THREE.MeshBasicMaterial({ color: '#F5B301', transparent: true, opacity: 0.9 }));
+    ring.position.y = 0.03; w.obj.add(ring);
+  }
+  var keys = {};
+  function kd(e) { if (/^(Arrow|[wasdWASD]$)/.test(e.key) && !(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName))) { keys[e.key.toLowerCase()] = true; } }
+  function ku(e) { keys[e.key.toLowerCase()] = false; }
+  document.addEventListener('keydown', kd); document.addEventListener('keyup', ku);
+  v.disposers.push(function () { document.removeEventListener('keydown', kd); document.removeEventListener('keyup', ku); });
+  w.goTo = function (tx, tz, onArrive) {
+    if (w.bounds) { tx = clamp(tx, w.bounds.minX, w.bounds.maxX); tz = clamp(tz, w.bounds.minZ, w.bounds.maxZ); }
+    w.path = [[tx, tz]]; w.onArrive = onArrive || null;
+  };
+  w.update = function (dt, t, frozen) {
+    if (frozen) return sync(t, false);
+    var kx = (keys.arrowright || keys.d ? 1 : 0) - (keys.arrowleft || keys.a ? 1 : 0), kz = (keys.arrowdown || keys.s ? 1 : 0) - (keys.arrowup || keys.w ? 1 : 0);
+    var moving = false;
+    if (kx || kz) {
+      // keyboard moves relative to the screen: rotate by the camera azimuth when the view is turned
+      var rot = GFX.portrait && v.fit.rotatePortrait; var mx = rot ? kz : kx, mz = rot ? -kx : kz;
+      var l = Math.hypot(mx, mz); w.x += mx / l * w.speed * dt; w.z += mz / l * w.speed * dt; w.face = Math.atan2(mx, mz); w.path = []; moving = true;
+      if (w.bounds) { w.x = clamp(w.x, w.bounds.minX, w.bounds.maxX); w.z = clamp(w.z, w.bounds.minZ, w.bounds.maxZ); }
+      if (opts.onMove) opts.onMove(w);
+    } else if (w.path.length) {
+      var tg = w.path[0], dx = tg[0] - w.x, dz = tg[1] - w.z, d = Math.hypot(dx, dz), s = w.speed * dt; moving = true;
+      if (d > 0.001) w.face = Math.atan2(dx, dz);
+      if (d <= s) { w.x = tg[0]; w.z = tg[1]; w.path.shift(); if (!w.path.length) { var f = w.onArrive; w.onArrive = null; if (f) f(); } }
+      else { w.x += dx / d * s; w.z += dz / d * s; }
+    }
+    sync(t, moving);
+  };
+  function sync(t, moving) { if (!w.obj) return; w.obj.position.set(w.x, 0, w.z); w.obj.rotation.y = w.face; w.obj.userData.body.position.y = moving && !reduceMotion ? Math.abs(Math.sin(t * 10)) * 0.07 : 0; }
+  return w;
+};
+
+/* A floating, glowing pickup (a document, a box). Returns { obj, x, z, taken } */
+Kit.pickup = function (v, x, z, color) {
+  var p = { x: x, z: z, taken: false, obj: null, t: Math.random() * 6 };
+  if (v.gl) {
+    var g = new THREE.Group();
+    var sheet = M3.mesh([M3.part(M3.G.box(0.5, 0.04, 0.66), '#FFFFFF'), M3.part(M3.G.box(0.36, 0.045, 0.06), color, [0, 0.005, -0.18]), M3.part(M3.G.box(0.3, 0.045, 0.04), '#9AA6BD', [0, 0.005, 0]), M3.part(M3.G.box(0.3, 0.045, 0.04), '#9AA6BD', [0, 0.005, 0.12])]);
+    sheet.rotation.x = -0.9; g.add(sheet);
+    var glow = new THREE.Mesh(M3.G.ring(0.35, 0.55, 24), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.55 }));
+    glow.position.y = -0.85; g.add(glow);
+    g.position.set(x, 1, z); v.scene.add(g); p.obj = g; p.glow = glow;
+  }
+  p.update = function (dt) { p.t += dt; if (p.obj) { p.obj.visible = !p.taken; p.obj.children[0].position.y = reduceMotion ? 0 : Math.sin(p.t * 2.4) * 0.12; p.obj.children[0].rotation.z = reduceMotion ? 0 : Math.sin(p.t) * 0.2; } };
+  return p;
+};
+
+/* Shared 2D fallback helpers. */
+Kit.d2 = {
+  rect: function (g, Pj, x0, z0, x1, z1, col) { var a = Pj.project(x0, 0, z0), b = Pj.project(x1, 0, z1); g.fillStyle = col; g.fillRect(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.abs(b.x - a.x), Math.abs(b.y - a.y)); },
+  dot: function (g, Pj, x, z, r, col) { var q = Pj.project(x, 0, z); g.fillStyle = col; g.beginPath(); g.arc(q.x, q.y, Math.max(3, r * Pj.s), 0, Math.PI * 2); g.fill(); },
+  box: function (g, Pj, x, z, w, d, col) { var q = Pj.project(x, 0, z), W = (Pj.rot ? d : w) * Pj.s, H = (Pj.rot ? w : d) * Pj.s; g.fillStyle = col; g.fillRect(q.x - W / 2, q.y - H / 2, W, H); g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 1.5; g.strokeRect(q.x - W / 2, q.y - H / 2, W, H); }
+};
+
+/* =============================================================================
+ * MISSION 1: GET ON THE PIPELINE  (SOP §4.2)
+ * Walk the compound, pick up the right documents for the partner file, take it
+ * to the cluster first (validation), then sign up at the IOM CP desk.
+ * ========================================================================== */
+Missions.M1 = { start: function (M, ctx) {
+  var B = { minX: -9.5, maxX: 9.5, minZ: -6, maxZ: 5.6, maxY: 2.6 };
+  var v = Kit.view({ bounds: B, elev: 54 });
+  var OFF = { you: [-6, -3.6], cluster: [0, -3.9], iom: [6, -3.6] };
+  var DESK = { cluster: [0, -2.2], iom: [6, -1.9] };
+  var MAJOK = [-1.2, 1.6];
+  var st = { phase: 'collect', docs: [], good: 0, need: 0, evs: shuffle(M.events).slice(0, M.eventsPerRun || 2), evAt: [], busy: false };
+
+  /* ---------- scene ---------- */
+  if (v.gl) {
+    var P = [], rr = (function (s) { return function () { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; })(41);
+    P.push(M3.part(M3.G.plane(70, 50), '#B9D27F', [0, 0, 0]));
+    P.push(M3.part(M3.G.box(20, 0.03, 12.4), '#E3BC90', [0, 0.012, -0.3]));
+    for (var fx = -10; fx <= 10.01; fx += 1.25) { P.push(M3.part(M3.G.box(0.09, 0.6, 0.09), '#8B5E34', [fx, 0.3, -6.5])); P.push(M3.part(M3.G.box(0.09, 0.6, 0.09), '#8B5E34', [fx, 0.3, 5.9])); }
+    function building(x, z, roof, w) {
+      w = w || 3.2;
+      P.push(M3.part(M3.G.box(w, 1.5, 2.0), '#F7F3EA', [x, 0.75, z])); P.push(M3.part(M3.G.box(w + 0.3, 0.16, 2.3), roof, [x, 1.58, z]));
+      P.push(M3.part(M3.G.box(0.7, 1.0, 0.05), '#5B6475', [x, 0.5, z + 1.01])); P.push(M3.part(M3.G.box(0.6, 0.4, 0.05), '#9FD3F2', [x - 1.0, 0.95, z + 1.01])); P.push(M3.part(M3.G.box(0.6, 0.4, 0.05), '#9FD3F2', [x + 1.0, 0.95, z + 1.01]));
+    }
+    building(OFF.you[0], OFF.you[1], C.ngo.color); building(OFF.cluster[0], OFF.cluster[1], '#D6246E', 3.6); building(OFF.iom[0], OFF.iom[1], '#0033A0', 3.6);
+    [DESK.cluster, DESK.iom].forEach(function (d) { P.push(M3.part(M3.G.box(1.6, 0.08, 0.8), '#C49A6C', [d[0], 0.72, d[1]])); [[-0.7, -0.3], [0.7, -0.3], [-0.7, 0.3], [0.7, 0.3]].forEach(function (o) { P.push(M3.part(M3.G.box(0.07, 0.7, 0.07), '#8B5E34', [d[0] + o[0], 0.35, d[1] + o[1]])); }); P.push(M3.part(M3.G.box(0.36, 0.03, 0.26), '#FFFFFF', [d[0] - 0.3, 0.78, d[1]])); });
+    for (var t = 0; t < 16; t++) { var x = -16 + rr() * 32, z = -12 + rr() * 24; if (Math.abs(x) < 10.5 && Math.abs(z) < 7) continue; M3.acacia(P, x, z, 0.8 + rr() * 0.4); }
+    for (var b = 0; b < 8; b++) M3.bush(P, -9 + rr() * 18, rr() < 0.5 ? 5.2 : -5.8, 0.7);
+    P.push(M3.part(M3.G.cyl(0.9, 0.9, 0.06, 16), '#C2865A', [OFF.you[0], 0.02, OFF.you[1] + 2.3]));
+    v.scene.add(M3.mesh(P, { receive: true }));
+    var nya = M3.person({ skin: '#4E2F1C', shirt: '#D6246E', hair: 'long', dress: true }); nya.position.set(DESK.cluster[0], 0, DESK.cluster[1] - 0.8); v.scene.add(nya);
+    var lual = M3.person({ skin: '#6B4226', shirt: '#0033A0', hair: 'cap', hairColor: '#0033A0' }); lual.position.set(DESK.iom[0], 0, DESK.iom[1] - 0.8); v.scene.add(lual);
+    var maj = M3.person({ skin: '#7A4B2A', shirt: '#E5554F', hair: 'cap', hairColor: '#C62E2E' }); maj.position.set(MAJOK[0], 0, MAJOK[1]); v.scene.add(maj);
+    var stampMesh = M3.mesh([M3.part(M3.G.cyl(0.35, 0.35, 0.06, 18), '#12865A'), M3.part(M3.G.cyl(0.25, 0.25, 0.07, 18), '#FFFFFF', [0, 0.005, 0])]); stampMesh.visible = false; v.scene.add(stampMesh);
+  }
+  Kit.tag('Your office', [OFF.you[0], 2.2, OFF.you[1]]);
+  Kit.tag('Cluster desk', [DESK.cluster[0], 2.1, DESK.cluster[1]], function () { goDesk('cluster'); });
+  Kit.tag('IOM CP desk', [DESK.iom[0], 2.1, DESK.iom[1]], function () { goDesk('iom'); });
+
+  /* ---------- documents ---------- */
+  var good = M.docs.filter(function (d) { return d.good; }), bad = shuffle(M.docs.filter(function (d) { return !d.good; })).slice(0, M.badPerRun || 3);
+  var spots = shuffle([[-7.4, 0.6], [-4.6, 2.6], [-2.6, -0.6], [-6.4, 4.0], [-2.4, 4.2], [1.6, 2.6], [3.4, 0.4], [4.6, 3.9], [7.8, 1.2], [8.2, 4.2], [0.8, -0.2], [-8.4, 2.4]]);
+  good.concat(bad).forEach(function (d, i) {
+    var sp = spots[i], p = Kit.pickup(v, sp[0], sp[1], '#F5B301'); p.d = d;
+    p.tag = Kit.tag(esc(d.text), function () { return p.taken ? null : [p.x, 1.75, p.z]; }, function () { goDoc(p); }, 'doc', { sep: true });
+    st.docs.push(p);
+  });
+  st.need = good.length;
+  st.evAt = [2, 4];
+
+  var me = Kit.walker(v, -6, -1.3, { bounds: { minX: -9.2, maxX: 9.2, minZ: -2.6, maxZ: 5.4 } });
+  Kit.taps(v, function () {
+    var items = st.docs.filter(function (p) { return !p.taken; }).map(function (p) { return { x: p.x, z: p.z, r: 0.8, h: 1, doc: p }; });
+    items.push({ x: DESK.cluster[0], z: DESK.cluster[1], r: 1.2, h: 0.8, desk: 'cluster' }, { x: DESK.iom[0], z: DESK.iom[1], r: 1.2, h: 0.8, desk: 'iom' });
+    return items;
+  }, function (hit) { if (hit.doc) goDoc(hit.doc); else goDesk(hit.desk); }, function (g) { if (!st.busy) { me.goTo(g.x, g.z); Sound.tap(); } });
+
+  function dock() {
+    if (st.phase !== 'collect') return;
+    Kit.say('you', 'Partner file: <b>' + st.good + '/' + st.need + '</b> right documents. Tap a glowing document to pick it up. Then go to the <b>cluster desk</b>.',
+      '<div class="progress" aria-hidden="true"><div style="width:' + Math.round(st.good / st.need * 100) + '%"></div></div>');
+  }
+  function scr(x, y, z) { return GFX.project(x, y, z); }
+
+  function goDoc(p) {
+    if (st.busy || p.taken || st.phase !== 'collect' || ctx.busy) return;
+    me.goTo(p.x, p.z + 0.6, function () {
+      if (p.taken || ctx.busy) return;
+      p.taken = true; GFX.removeLabel(p.tag);
+      var at = scr(p.x, 1.2, p.z), d = p.d;
+      if (d.good) {
+        st.good++;
+        ctx.answer({ correct: true, id: d.id, ref: d.ref, title: d.text, why: d.why, at: at });
+        dock();
+        if (st.evAt.length && st.good >= st.evAt[0] && st.evs.length) { st.evAt.shift(); var E = st.evs.shift(); later(function () { if (run && !run.ended) { st.busy = true; Kit.choice(E, { pos: MAJOK, done: function () { st.busy = false; dock(); } }); } }, 700); }
+      } else {
+        ctx.answer({ correct: false, id: d.id, ref: d.ref, title: 'Wrong document', why: d.why, critical: d.critical, at: at, focus: [p.x, 1, p.z] });
+      }
+    });
+  }
+  function goDesk(which) {
+    if (st.busy || ctx.busy) return;
+    var d = DESK[which];
+    me.goTo(d[0], d[1] + 1.1, function () {
+      if (ctx.busy) return;
+      var at = scr(d[0], 1.4, d[1]);
+      if (st.phase === 'collect') {
+        if (which === 'iom') { ctx.answer({ correct: false, id: 'order', ref: M.clusterFirst.ref, title: 'Cluster first', why: M.clusterFirst.why, at: at, costLife: false }); return; }
+        if (st.good < st.need) { ctx.answer({ correct: false, id: 'incomplete', ref: M.incomplete.ref, title: 'File incomplete', why: M.incomplete.why + ' (' + st.good + '/' + st.need + ')', at: at, costLife: false }); return; }
+        return validate();
+      }
+      if (st.phase === 'signup') {
+        if (which === 'cluster') { toast('The cluster has validated your file. Now go to the <b>IOM CP desk</b>.', 'info', 2600); return; }
+        return signup();
+      }
+    });
+  }
+  function validate() {
+    st.phase = 'validating'; st.busy = true; ctx.phase('Cluster validation');
+    // leftover wrong documents were rightly left behind
+    st.docs.forEach(function (p) { if (!p.taken && !p.d.good) ctx.answer({ correct: true, id: p.d.id, ref: p.d.ref, silent: true }); });
+    ctx.answer({ correct: true, id: 'to-cluster', ref: M.validation.ref, title: 'File delivered to the cluster', why: M.validation.text, at: scr(DESK.cluster[0], 1.4, DESK.cluster[1]) });
+    var day = 0, cal = Kit.tag('Working day 1', [DESK.cluster[0], 2.9, DESK.cluster[1]], null, 'target');
+    Kit.say(M.validation.speaker, fmt(M.validation.text, true));
+    (function tick() {
+      if (!run || run.ended) return;
+      day++; cal.node.textContent = 'Working day ' + day; Sound.tick();
+      if (day < 5) return later(tick, reduceMotion ? 120 : 520);
+      later(function () {
+        GFX.removeLabel(cal); Sound.stamp(); toast('<b>Validated.</b> Capacity, presence and coordination confirmed.' + refChip(M.validation.ref), '', 3000);
+        if (v.gl) { stampMesh.visible = true; stampMesh.position.set(DESK.cluster[0] + 0.3, 0.8, DESK.cluster[1]); }
+        st.phase = 'signup'; st.busy = false; ctx.phase('Sign up with the IOM CP team');
+        Kit.say('nyakuoth', 'Your file is validated. Now go to the <b>IOM CP desk</b> to sign the agreement.');
+        // a last shortcut from Majok, if one is left
+        if (st.evs.length && st.evAt.length) { st.busy = true; var E = st.evs.shift(); st.evAt = []; Kit.choice(E, { pos: MAJOK, done: function () { st.busy = false; Kit.say('nyakuoth', 'Now go to the <b>IOM CP desk</b> to sign the agreement.'); } }); }
+      }, 500);
+    })();
+  }
+  function signup() {
+    st.phase = 'signing'; st.busy = true; ctx.phase('Agreement, Requester, orientation');
+    Kit.choices(M.signup, DESK.iom, function () {
+      Sound.fanfare(); confetti();
+      if (v.gl) { stampMesh.visible = true; stampMesh.position.set(DESK.iom[0] + 0.3, 0.8, DESK.iom[1]); }
+      Kit.say('lual', '<b>Welcome to the Core Pipeline!</b> Your organisation is onboarded. Next: assess the needs.');
+      later(function () { ctx.finish(); }, 2000);
+    });
+  }
+
+  /* ---------- frame ---------- */
+  v.update = function (dt, t) {
+    v.tween(dt);
+    st.docs.forEach(function (p) { p.update(dt); });
+    me.update(dt, t, ctx.busy);
+  };
+  v.draw2d = function (g, Pj) {
+    g.fillStyle = '#B9D27F'; g.fillRect(0, 0, Pj.W, Pj.H);
+    Kit.d2.rect(g, Pj, -10, -6.5, 10, 5.9, '#E3BC90');
+    Kit.d2.box(g, Pj, OFF.you[0], OFF.you[1], 3.2, 2, C.ngo.color); Kit.d2.box(g, Pj, OFF.cluster[0], OFF.cluster[1], 3.6, 2, '#D6246E'); Kit.d2.box(g, Pj, OFF.iom[0], OFF.iom[1], 3.6, 2, '#0033A0');
+    Kit.d2.box(g, Pj, DESK.cluster[0], DESK.cluster[1], 1.6, 0.8, '#C49A6C'); Kit.d2.box(g, Pj, DESK.iom[0], DESK.iom[1], 1.6, 0.8, '#C49A6C');
+    st.docs.forEach(function (p) { if (!p.taken) Kit.d2.dot(g, Pj, p.x, p.z, 0.35, '#F5B301'); });
+    Kit.d2.dot(g, Pj, MAJOK[0], MAJOK[1], 0.3, '#E5554F'); Kit.d2.dot(g, Pj, me.x, me.z, 0.34, C.ngo.color);
+  };
+  Kit.start(v, ctx);
+  run.debug = { st: st, M: M, me: me };
+  ctx.phase('Collect the partner file');
+  dock();
+} };
+
+/* =============================================================================
+ * MISSION 2: NEEDS CHECK  (SOP §4.3)
+ * Walk the village, visit households: consent first, count households (not
+ * people), skip families already assisted, note the most vulnerable.
+ * ========================================================================== */
+Missions.M2 = { start: function (M, ctx) {
+  var B = { minX: -9.5, maxX: 9.5, minZ: -6.2, maxZ: 6.2, maxY: 2.6 };
+  var v = Kit.view({ bounds: B, elev: 56, sky: '#CFE9F7' });
+  var HOUSES = [[-7.2, -3.6], [-3.6, -4.6], [0.4, -4.9], [4.4, -4.4], [7.6, -3.0], [-7.6, 1.2], [7.8, 1.6], [-5.4, 4.6], [-1.2, 4.9], [3.2, 4.8], [6.8, 4.6]];
+  var CAST = { nyakuoth: [-1.6, -1.0], majok: [1.8, 0.8], mabior: [-2.6, 1.6] };
+  var hh = shuffle(M.households).slice(0, M.householdsPerRun || 5);
+  var st = { visits: [], counted: 0, done: 0, busy: false, phase: 'visit' };
+
+  if (v.gl) {
+    var P = [], rr = (function (s) { return function () { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; })(77);
+    P.push(M3.part(M3.G.plane(70, 50), '#B7CF7A', [0, 0, 0]));
+    P.push(M3.part(M3.G.disc(7.2, 28), '#DDB68A', [0, 0.01, 0]));
+    var path = []; for (var k = 0; k <= 30; k++) path.push([-16 + k * 1.1, 7.6 + Math.sin(k * 0.4) * 0.6]); P.push(M3.ribbon(path, 1.2, '#C9895A', 0.02));
+    var riv = []; for (var r = 0; r <= 40; r++) riv.push([-18 + r * 0.95, -9.4 + Math.sin(r * 0.35) * 0.8]); P.push(M3.ribbon(riv, 3, '#E2C9A0', 0.012)); P.push(M3.ribbon(riv, 2.2, '#5FB4E0', 0.02));
+    HOUSES.forEach(function (h, i) { M3.tukul(i % 2 ? '#E1C59A' : '#D9B98C', i % 2 ? '#A57E44' : '#B08A4E', P, h[0], h[1], 0.95); });
+    for (var t = 0; t < 22; t++) { var x = -16 + rr() * 32, z = -11 + rr() * 22, near = HOUSES.some(function (h) { return Math.hypot(h[0] - x, h[1] - z) < 2.2; }); if (near || Math.hypot(x, z) < 7.5 || Math.abs(z + 9.4) < 2.2) continue; if (rr() < 0.6) M3.acacia(P, x, z, 0.8 + rr() * 0.4); else M3.bush(P, x, z, 0.9); }
+    // a family sleeping under a tree, cooking fire, jerrycans: life in the village
+    M3.acacia(P, 3.4, -1.6, 0.9); P.push(M3.part(M3.G.cyl(0.25, 0.3, 0.12, 8), '#555555', [-4.4, 0.06, -1.2])); P.push(M3.part(M3.G.cone(0.18, 0.4, 6), '#F28C28', [-4.4, 0.3, -1.2]));
+    [[-0.4, 2.6], [-0.1, 2.8]].forEach(function (j) { P.push(M3.part(M3.G.box(0.26, 0.36, 0.18), '#F5B301', [j[0], 0.18, j[1]])); });
+    v.scene.add(M3.mesh(P, { receive: true }));
+    var looks = { nyakuoth: { skin: '#4E2F1C', shirt: '#D6246E', hair: 'long', dress: true }, majok: { skin: '#7A4B2A', shirt: '#E5554F', hair: 'cap', hairColor: '#C62E2E' }, mabior: { skin: '#4A2C1A', shirt: '#7A5CFA', hair: 'bald', cane: true } };
+    Object.keys(CAST).forEach(function (k) { var p = M3.person(looks[k]); p.position.set(CAST[k][0], 0, CAST[k][1]); v.scene.add(p); });
+    // villagers outside their homes
+    HOUSES.forEach(function (h, i) { if (i % 3) return; var p = M3.person({ skin: '#5C3A21', shirt: ['#E5554F', '#19A7E0', '#00A889', '#F28C28'][i % 4], dress: i % 2 === 0, hair: 'headwrap', hairColor: '#F5B301' }); p.position.set(h[0] + 0.9, 0, h[1] + (h[1] < 0 ? 1.2 : -1.2)); v.scene.add(p); });
+  }
+
+  // households to visit
+  var slots = shuffle(HOUSES.map(function (h, i) { return i; })).slice(0, hh.length);
+  hh.forEach(function (H, i) {
+    var pos = HOUSES[slots[i]], vis = { H: H, x: pos[0], z: pos[1], done: false, flag: null };
+    vis.door = [pos[0], pos[1] + (pos[1] < 0 ? 1.6 : -1.6)];
+    vis.bub = Kit.bubble('house', '#7A5CFA', 'Visit this household', [pos[0], 2.9, pos[1]], function () { visit(vis); });
+    st.visits.push(vis);
+  });
+
+  var me = Kit.walker(v, 0, 1.4, { bounds: { minX: -9.2, maxX: 9.2, minZ: -5.9, maxZ: 5.9 } });
+  Kit.taps(v, function () { return st.visits.filter(function (s) { return !s.done; }).map(function (s) { return { x: s.x, z: s.z, r: 1.3, h: 1.4, vis: s }; }); },
+    function (hit) { visit(hit.vis); }, function (g) { if (!st.busy) { me.goTo(g.x, g.z); Sound.tap(); } });
+
+  function dock() {
+    Kit.say('you', 'Visit each household with a <b>purple bubble</b>. Households counted: <b>' + st.counted + '</b> · visited ' + st.done + '/' + st.visits.length + '.',
+      '<div class="progress" aria-hidden="true"><div style="width:' + Math.round(st.done / st.visits.length * 100) + '%"></div></div>');
+  }
+  function visit(s) {
+    if (st.busy || s.done || ctx.busy) return;
+    st.busy = true;
+    me.goTo(s.door[0], s.door[1], function () {
+      if (!run || run.ended) return;
+      var H = s.H, O = M.outcomes[H.kind], C1 = M.consent;
+      var step1 = { id: H.id + '-consent', speaker: 'you', prompt: H.text, ref: C1.ref, explain: C1.why,
+        options: [{ text: C1.ask, correct: true }, { text: C1.skip, why: C1.why }] };
+      Kit.choice(step1, { pos: [s.x, s.z], h: 2.9, after: 900, done: function () {
+        var prompt = H.kind === 'refuse' ? 'You ask for consent. She says no.' : 'They agree and you explain why you collect the data.';
+        var step2 = { id: H.id, speaker: 'you', prompt: prompt, ref: O.ref, explain: O.why,
+          options: [{ text: O.ok, correct: true }, O.critical ? { text: O.bad, critical: O.critical } : { text: O.bad, why: O.badWhy }] };
+        Kit.choice(step2, { pos: [s.x, s.z], h: 2.9, done: function (ok) {
+          s.done = true; st.done++; GFX.removeLabel(s.bub);
+          if (ok && (H.kind === 'count' || H.kind === 'priority')) st.counted++;
+          s.flag = Kit.tag(ok ? (H.kind === 'count' || H.kind === 'priority' ? '&#10003; Counted' : '&#10003; Not counted') : '&#10003; Visited', [s.x, 2.6, s.z]);
+          st.busy = false;
+          if (st.done >= st.visits.length) return wrapUp();
+          dock();
+        } });
+      } });
+    });
+  }
+  function wrapUp() {
+    st.phase = 'report'; st.busy = true; ctx.phase('Report to the cluster');
+    var evs = shuffle(M.events).slice(0, M.eventsPerRun || 2).concat([M.trackEvents[Store.get().track] || M.trackEvents.SNFI]);
+    var walkTo = CAST.nyakuoth;
+    me.goTo(walkTo[0] + 1.1, walkTo[1] + 0.6, function () {
+      Kit.choices(evs, walkTo, function () {
+        Sound.fanfare(); confetti();
+        Kit.say('nyakuoth', '<b>Assessment validated.</b> ' + st.counted + ' households counted: that is ' + st.counted + ' kits per kit type, one per household. Signed by you and the cluster.');
+        toast('<b>Assessment done.</b> Valid for 3 months; attach it to the request.' + refChip('SOP §4.3, §4.11'), '', 3600);
+        later(function () { ctx.finish(); }, 2400);
+      });
+    });
+  }
+
+  v.update = function (dt, t) { v.tween(dt); me.update(dt, t, ctx.busy && !me.path.length); };
+  v.draw2d = function (g, Pj) {
+    g.fillStyle = '#B7CF7A'; g.fillRect(0, 0, Pj.W, Pj.H);
+    Kit.d2.dot(g, Pj, 0, 0, 7.2, '#DDB68A');
+    HOUSES.forEach(function (h) { Kit.d2.dot(g, Pj, h[0], h[1], 1.0, '#B08A4E'); Kit.d2.dot(g, Pj, h[0], h[1], 0.5, '#D9B98C'); });
+    Object.keys(CAST).forEach(function (k) { Kit.d2.dot(g, Pj, CAST[k][0], CAST[k][1], 0.3, '#333'); });
+    Kit.d2.dot(g, Pj, me.x, me.z, 0.34, C.ngo.color);
+  };
+  Kit.start(v, ctx);
+  run.debug = { st: st, M: M, me: me };
+  ctx.phase('Visit the households');
+  dock();
+} };
+
+/* =============================================================================
+ * MISSION 3: REQUEST BUILDER  (SOP §4.4)
+ * Snap the pieces of the request into the form board, pick the hub on the
+ * map, send it, then follow it through the three review gates.
+ * ========================================================================== */
+Missions.M3 = { start: function (M, ctx) {
+  var trk = Store.get().track || 'SNFI';
+  var sc = pick(M.scenarios.filter(function (s) { return s.track === trk; }));
+  var BUILD = { minX: -8.2, maxX: 7.4, minZ: -3.2, maxZ: 3.6, maxY: 3.2 };
+  var REVIEW = { minX: -9.5, maxX: 9.5, minZ: -8.6, maxZ: -4.2, maxY: 2.6 };
+  var v = Kit.view({ bounds: BUILD, elev: 50 });
+  var BOARD = { x: -3.6, z: -1.2 }, MAP = { x: 3.4, z: 0.4 };
+  var GX = [-5, 0, 5], GZ = -6.4;
+  var st = { phase: 'build', sel: null, filled: {}, hubOk: false, pieces: [], slotL: {}, env: null, envX: -9, busy: false };
+  var vars = { hh: sc.hh, people: sc.hh * 6, assessed: sc.assessed, kit: sc.kit };
+  function sub(t) { return String(t).replace(/\{(\w+)\}/g, function (m, k) { return vars[k] != null ? (typeof vars[k] === 'number' ? fmtNum(vars[k]) : vars[k]) : m; }); }
+
+  /* ---------- scene ---------- */
+  var slotPos = {};
+  M.slots.forEach(function (s, i) { slotPos[s.id] = [BOARD.x - 2.6 + (i % 2) * 2.6 + 1.3, 2.75 - Math.floor(i / 2) * 0.8, BOARD.z + 0.12]; });
+  var hubs = M.hubs.filter(function (h) { return h.notTrack !== trk; });
+  if (v.gl) {
+    var P = [], rr = (function (s) { return function () { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; })(13);
+    P.push(M3.part(M3.G.plane(70, 50), '#B9D27F', [0, 0, 0]));
+    P.push(M3.part(M3.G.box(18, 0.03, 8), '#E9D8BE', [0, 0.012, 0]));
+    // the form board on two legs
+    P.push(M3.part(M3.G.box(5.6, 3.0, 0.12), '#FFFFFF', [BOARD.x, 2.0, BOARD.z])); P.push(M3.part(M3.G.box(5.8, 0.25, 0.16), '#19A7E0', [BOARD.x, 3.55, BOARD.z]));
+    P.push(M3.part(M3.G.box(0.12, 2.0, 0.12), '#8B5E34', [BOARD.x - 2.4, 0.6, BOARD.z])); P.push(M3.part(M3.G.box(0.12, 2.0, 0.12), '#8B5E34', [BOARD.x + 2.4, 0.6, BOARD.z]));
+    M.slots.forEach(function (s) { var p = slotPos[s.id]; P.push(M3.part(M3.G.box(2.3, 0.6, 0.05), '#E6EEFA', [p[0], p[1], p[2]])); });
+    // the map table: a stylised (not to scale) South Sudan
+    P.push(M3.part(M3.G.box(6.4, 0.2, 7.4), '#8B5E34', [MAP.x, 0.9, MAP.z])); P.push(M3.part(M3.G.box(6.0, 0.06, 7.0), '#CDE3A8', [MAP.x, 1.02, MAP.z]));
+    [[-2.9, -3.3], [2.9, -3.3], [-2.9, 3.3], [2.9, 3.3]].forEach(function (o) { P.push(M3.part(M3.G.box(0.15, 0.85, 0.15), '#6E4826', [MAP.x + o[0], 0.42, MAP.z + o[1]])); });
+    var nile = []; for (var k = 0; k <= 16; k++) nile.push([MAP.x + 1.6 + Math.sin(k * 0.5) * 0.4, MAP.z + 3.3 - k * 0.42]); P.push(M3.ribbon(nile, 0.22, '#5FB4E0', 1.06));
+    // review road with three gates
+    var road = []; for (var r = 0; r <= 20; r++) road.push([-10 + r, GZ]); P.push(M3.ribbon(road, 1.4, '#C9895A', 0.02));
+    GX.forEach(function (x) { P.push(M3.part(M3.G.box(0.16, 2.0, 0.16), '#555555', [x, 1, GZ - 0.9])); P.push(M3.part(M3.G.box(0.16, 2.0, 0.16), '#555555', [x, 1, GZ + 0.9])); P.push(M3.part(M3.G.box(0.2, 0.3, 2.0), '#19A7E0', [x, 2.0, GZ])); });
+    P.push(M3.part(M3.G.box(3.0, 1.6, 2.0), '#F7F3EA', [8.6, 0.8, GZ])); P.push(M3.part(M3.G.box(3.3, 0.16, 2.3), '#D6246E', [8.6, 1.64, GZ]));
+    for (var t = 0; t < 14; t++) { var x = -16 + rr() * 32, z = -13 + rr() * 26; if (Math.abs(x) < 10 && z > -9 && z < 5) continue; M3.acacia(P, x, z, 0.8 + rr() * 0.4); }
+    v.scene.add(M3.mesh(P, { receive: true }));
+    hubs.forEach(function (h) { var pin = M3.mesh([M3.part(M3.G.cyl(0.04, 0.04, 0.6, 5), '#333333', [0, 0.3, 0]), M3.part(M3.G.ball(0.17, 1), h.id === 'Juba' ? '#0033A0' : '#E5484D', [0, 0.65, 0])]); pin.position.set(MAP.x + h.x * 0.85, 1.05, MAP.z + h.z * 0.85); v.scene.add(pin); h.mesh = pin; });
+    var lual = M3.person({ skin: '#6B4226', shirt: '#0033A0', hair: 'cap', hairColor: '#0033A0' }); lual.position.set(0, 0, 1.6); v.scene.add(lual);
+    st.env = M3.mesh([M3.part(M3.G.box(0.9, 0.08, 0.6), '#FFFFFF'), M3.part(M3.G.box(0.5, 0.09, 0.08), '#19A7E0', [0, 0, -0.1])]); st.env.position.set(-9, 1.2, GZ); st.env.visible = false; v.scene.add(st.env);
+  }
+  Kit.tag('Not to scale', function () { return st.phase === 'build' ? [MAP.x, 1.2, MAP.z + 3.6] : null; });
+  hubs.forEach(function (h) { h.label = Kit.tag(esc(h.id), function () { return st.phase === 'build' ? [MAP.x + h.x * 0.85, 1.9, MAP.z + h.z * 0.85] : null; }, function () { tapHub(h); }); });
+  M.slots.forEach(function (s) {
+    var L = Kit.tag('<b>' + esc(s.label) + '</b>', function () { return st.phase === 'build' ? slotPos[s.id] : null; }, function () { tapSlot(s); }, 'slot');
+    st.slotL[s.id] = L;
+  });
+  GX.forEach(function (x, i) { var g = M.gates[i]; Kit.tag((i + 1) + ' ' + esc(g.label) + ' · ' + esc(g.time), function () { return st.phase === 'review' ? [x, 2.6, GZ] : null; }); });
+
+  /* ---------- pieces ---------- */
+  M.slots.forEach(function (s) {
+    var list = s.pieces[trk] || s.pieces.ALL || [];
+    list.forEach(function (p, i) { st.pieces.push({ id: s.id + '-' + i, slot: s.id, text: sub(p.text), ok: !!p.ok, why: p.why, ref: s.ref, used: false }); });
+  });
+  st.pieces = shuffle(st.pieces);
+
+  function header() { return '<div class="small" style="margin-bottom:6px"><span class="chip">' + esc(Store.get().track || 'SNFI') + '</span> <b>' + esc(sc.place) + '</b> · ' + fmtNum(sc.hh) + ' households assessed ' + esc(sc.assessed) + ' · ' + esc(sc.kit) + '</div>'; }
+  function tray() {
+    if (st.phase !== 'build') return;
+    var left = M.slots.filter(function (s) { return !st.filled[s.id]; }).length + (st.hubOk ? 0 : 1);
+    Kit.say(null, header() + 'Tap a piece, then its slot on the board. Tap the right <b>hub</b> on the map. <b>' + left + '</b> to go.',
+      '<div class="tray" id="tray">' + st.pieces.filter(function (p) { return !p.used; }).map(function (p) { return '<button class="scard" style="width:150px" type="button" aria-pressed="' + (st.sel === p) + '" data-id="' + p.id + '"><span>' + fmt(p.text, false) + '</span></button>'; }).join('') + '</div>' +
+      (left === 0 ? Kit.buttons([{ id: 'send', text: 'Send the request' }]) : ''));
+    $$('#tray .scard').forEach(function (b) { b.onclick = function () { if (ctx.busy) return; var p = st.pieces.filter(function (x) { return x.id === b.getAttribute('data-id'); })[0]; st.sel = st.sel === p ? null : p; Sound.tap(); tray(); }; });
+    var sb = $('#send'); if (sb) sb.onclick = send;
+    Object.keys(st.slotL).forEach(function (k) { st.slotL[k].node.classList.toggle('target', !!st.sel && !st.filled[k]); });
+  }
+  function scr(p) { return GFX.project(p[0], p[1], p[2]); }
+  function tapSlot(s) {
+    if (st.phase !== 'build' || ctx.busy || st.filled[s.id]) return;
+    if (!st.sel) { toast('Pick a <b>piece</b> below first.', 'info', 2000); return; }
+    var p = st.sel, at = scr(slotPos[s.id]);
+    if (p.slot !== s.id) { var right = M.slots.filter(function (x) { return x.id === p.slot; })[0]; ctx.answer({ correct: false, id: 'slot-' + p.slot, ref: M.ref, title: 'Other slot', why: 'That piece goes in "' + right.label + '".', at: at, costLife: false }); return; }
+    p.used = true; st.sel = null;
+    if (!p.ok) { ctx.answer({ correct: false, id: p.id, ref: p.ref, title: 'Not for this request', why: p.why, at: at }); tray(); return; }
+    st.filled[s.id] = p; st.slotL[s.id].node.innerHTML = '&#10003; ' + esc(p.text); st.slotL[s.id].node.classList.add('ok');
+    // the wrong pieces for this slot leave the tray
+    st.pieces.forEach(function (x) { if (x.slot === s.id && !x.used) { x.used = true; x.auto = true; } });
+    ctx.answer({ correct: true, id: p.id, ref: p.ref, title: s.label, at: at, silent: true });
+    Sound.build(); tray();
+  }
+  function tapHub(h) {
+    if (st.phase !== 'build' || ctx.busy || st.hubOk) return;
+    var at = GFX.project(MAP.x + h.x * 0.85, 1.6, MAP.z + h.z * 0.85), right = hubs.filter(function (x) { return x.id === sc.hub; })[0];
+    if (h.id !== sc.hub) { ctx.answer({ correct: false, id: 'hub', ref: M.hubRef, title: 'Not the nearest hub', why: h.id + ' covers ' + h.covers + '. Your site is in ' + sc.place + ': ' + right.id + ' covers ' + right.covers + '.', at: at }); return; }
+    st.hubOk = true; h.label.node.innerHTML = '&#10003; ' + esc(h.id); h.label.node.classList.add('ok');
+    ctx.answer({ correct: true, id: 'hub', ref: M.hubRef, title: 'Warehouse: ' + h.id, why: h.id + ' covers ' + h.covers + '.', at: at });
+    tray();
+  }
+  Kit.taps(v, function () { return st.phase === 'build' && !st.hubOk ? hubs.map(function (h) { return { x: MAP.x + h.x * 0.85, z: MAP.z + h.z * 0.85, r: 0.45, h: 1.6, hub: h }; }) : []; },
+    function (hit) { tapHub(hit.hub); });
+
+  /* ---------- review ---------- */
+  function send() {
+    if (ctx.busy || st.phase !== 'build') return;
+    st.phase = 'review'; ctx.phase('Review: 5 days at most');
+    st.pieces.forEach(function (p) { if (!p.ok && p.auto) ctx.answer({ correct: true, id: p.id, ref: p.ref, silent: true }); });
+    Sound.whoosh();
+    Kit.say('lual', 'Sent! Your request now goes through three gates. Quote its reference in every later email.');
+    v.camTo(REVIEW, 1.0);
+    if (st.env) st.env.visible = true;
+    var evs = shuffle(M.events).slice(0, M.eventsPerRun || 2), gate = 0;
+    function to(x, cb) { st.target = x; st.onReach = cb; }
+    (function next() {
+      if (!run || run.ended) return;
+      if (gate >= GX.length) return to(8.2, done);
+      var gx = GX[gate];
+      to(gx, function () {
+        Sound.stamp(); toast('<b>Gate ' + (gate + 1) + ' passed:</b> ' + esc(M.gates[gate].label) + ' (' + esc(M.gates[gate].time) + ').' + refChip(M.gatesRef), 'info', 2400);
+        var E = evs[gate]; gate++;
+        if (E) { st.busy = true; Kit.choice(E, { pos: [gx, GZ], h: 2.4, done: function () { st.busy = false; next(); } }); }
+        else later(next, 600);
+      });
+    })();
+    function done() {
+      Sound.fanfare(); confetti();
+      Kit.say('nyakuoth', '<b>Endorsed!</b> The cluster approved your request and forwarded it to the CP team. Next: book the collection.');
+      later(function () { ctx.finish(); }, 2200);
+    }
+  }
+
+  v.update = function (dt, t) {
+    v.tween(dt);
+    if (st.phase === 'review' && st.target != null && !ctx.busy && !st.busy) {
+      var s = (reduceMotion ? 20 : 4.2) * dt;
+      if (Math.abs(st.target - st.envX) <= s) { st.envX = st.target; st.target = null; var f = st.onReach; st.onReach = null; if (f) f(); }
+      else st.envX += Math.sign(st.target - st.envX) * s;
+    }
+    if (st.env) { st.env.position.set(st.envX, 1.2 + (reduceMotion ? 0 : Math.sin(t * 6) * 0.08), GZ); st.env.rotation.y = reduceMotion ? 0 : Math.sin(t * 3) * 0.2; }
+  };
+  v.draw2d = function (g, Pj) {
+    g.fillStyle = '#B9D27F'; g.fillRect(0, 0, Pj.W, Pj.H);
+    Kit.d2.rect(g, Pj, -9, -4, 9, 4, '#E9D8BE');
+    Kit.d2.box(g, Pj, BOARD.x, BOARD.z, 5.6, 0.4, '#FFFFFF');
+    Kit.d2.box(g, Pj, MAP.x, MAP.z, 6.0, 7.0, '#CDE3A8');
+    hubs.forEach(function (h) { Kit.d2.dot(g, Pj, MAP.x + h.x * 0.85, MAP.z + h.z * 0.85, 0.2, '#E5484D'); });
+    Kit.d2.rect(g, Pj, -10, GZ - 0.7, 10, GZ + 0.7, '#C9895A');
+    GX.forEach(function (x) { Kit.d2.box(g, Pj, x, GZ, 0.3, 2, '#19A7E0'); });
+    if (st.phase === 'review') Kit.d2.box(g, Pj, st.envX, GZ, 0.9, 0.6, '#FFFFFF');
+  };
+  Kit.start(v, ctx);
+  run.debug = { st: st, M: M, sc: sc };
+  ctx.phase('Build the request');
+  tray();
+} };
 
 /* =============================================================================
  * MISSION 6: DISTRIBUTION DAY
@@ -5521,7 +6636,7 @@ Missions.M6 = { start: function (M, ctx) {
   var R = M.rush, rushLen = R.seconds * pf;
 
   var st = { phase: 'announce', stations: {}, plots: [], people: [], houses: [], sel: null, team: null,
-             usedDecoys: {}, hitChips: {}, rushT: 0, spawnT: 1.5, doorT: R.doorToDoorEvery * pf * 0.55, events: [], evIdx: 0, served: 0, firstOk: {}, ended: false, tip: 0 };
+             usedDecoys: {}, hitChips: {}, rushT: 0, spawnT: 0.4, doorT: R.doorToDoorEvery * pf * 0.5, events: [], evIdx: 0, served: 0, firstOk: {}, ended: false, tip: 0 };
   var dock = ctx.dock();
   var gl = GFX.mode === 'webgl';
   var v = { bounds: BOUNDS_ANN, fit: { elev: 52, azim: 0, rotatePortrait: true,
@@ -5856,7 +6971,7 @@ Missions.M6 = { start: function (M, ctx) {
     // pick event calls
     var evs = shuffle(M.events).slice(0, M.eventsPerRun || 4), lastEv = evs.filter(function (e) { return e.last; });
     evs = evs.filter(function (e) { return !e.last; }).concat(lastEv);
-    st.events = evs.map(function (e, i) { var f = e.last ? 0.985 : (0.14 + i * (0.76 / Math.max(1, evs.length - (lastEv.length ? 1 : 0)))); return { e: e, at: f * rushLen, done: false }; });
+    st.events = evs.map(function (e, i) { var f = e.last ? 0.985 : (0.22 + i * (0.5 / Math.max(1, evs.length - (lastEv.length ? 1 : 0)))); return { e: e, at: f * rushLen, done: false }; });
     ctx.timer(rushLen);
   }
   function callHouse() {
@@ -5922,8 +7037,8 @@ Missions.M6 = { start: function (M, ctx) {
     if (st.rushT >= rushLen) { syncPeople(dt, t, true); return endRush(); }
     var ev = st.events.filter(function (e) { return !e.done && !e.e.last && st.rushT >= e.at; })[0];
     if (ev) return runEvent(ev);
-    st.spawnT -= dt; if (st.spawnT <= 0 && st.rushT < rushLen - 8) { spawn(); st.spawnT = R.spawnEvery * pf * (0.75 + Math.random() * 0.5); }
-    st.doorT -= dt; if (st.doorT <= 0 && st.rushT < rushLen - 14) { callHouse(); st.doorT = R.doorToDoorEvery * pf; }
+    st.spawnT -= dt; if (st.spawnT <= 0 && st.rushT < rushLen * 0.8) { spawn(); st.spawnT = R.spawnEvery * pf * (0.75 + Math.random() * 0.5); }
+    st.doorT -= dt; if (st.doorT <= 0 && st.rushT < rushLen * 0.7) { callHouse(); st.doorT = R.doorToDoorEvery * pf; }
     // houses waiting
     st.houses.forEach(function (h) {
       if (!h.active) return; h.patience -= dt;
@@ -6098,7 +7213,7 @@ var Screens = {
       '<span class="pill grow" style="min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Your journey · ' + esc(t.short) + '</span>' +
       '<span class="pill">' + icon('star', 'var(--gold)') + stars + '/' + (C.missions.length * 3) + '</span></div>' +
       '<div class="dock" id="dock"><div class="dock-inner"><div id="m-sel"></div>' +
-        '<p class="small muted" style="margin:8px 0 0">Prototype: Mission 6 is playable. The other missions arrive in the full build.</p>' +
+        (function () { var soon = C.missions.filter(function (m) { return !isPlayable(m); }).map(function (m) { return m.number; }); return soon.length ? '<p class="small muted" style="margin:8px 0 0">Coming soon: Mission' + (soon.length > 1 ? 's ' : ' ') + soon.join(', ') + '.</p>' : ''; })() +
         '<div class="row" style="margin-top:6px"><button class="btn sm alt" id="m-rules">Critical rules</button><button class="btn sm alt" id="m-reset" style="color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad)">Reset progress</button></div>' +
       '</div></div>';
     var stopBtns = {};
@@ -6108,7 +7223,7 @@ var Screens = {
       $('#m-sel').innerHTML = '<div class="row"><div class="grow" style="min-width:0"><div class="small muted">' + (M === next ? 'Next stop' : 'Stop ' + M.number) + ' · ' + esc(M.place) + ' · ' + esc(M.topic) + '</div>' +
         '<b style="font-size:19px">Mission ' + M.number + ': ' + esc(M.title) + '</b>' + (rec.best ? ' ' + starsHTML(rec.best.stars) : '') + '</div>' +
         (open ? '<button class="btn big mc" id="m-play" style="--mc:' + M.color + ';--mc-text:' + textOn(M.color) + '">' + (rec.completed ? 'Replay' : 'Play') + '</button>'
-              : '<span class="chip">' + icon('lock', 'currentColor', 'width="16" height="16"') + (M.playable === false ? ' Full build' : ' Locked') + '</span>') + '</div>';
+              : '<span class="chip">' + icon('lock', 'currentColor', 'width="16" height="16"') + (!isPlayable(M) ? ' Coming soon' : ' Locked') + '</span>') + '</div>';
       if (open) $('#m-play').onclick = function () { Screens.intro(M.id); };
       GFX.refit();
     }

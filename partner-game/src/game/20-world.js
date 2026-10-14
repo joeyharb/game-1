@@ -20,13 +20,15 @@ function journeyLayout() {
   return { stops: stops, road: road, span: span, compound: compound,
            bounds: { minX: -span / 2 - 5, maxX: span / 2 + 2.5, minZ: -6.5, maxZ: 6.5, maxY: 2.5 } };
 }
+/* A mission is playable when CONTENT says so and its code is in the build. */
+function isPlayable(M) { return !!M && M.playable !== false && !!Missions[M.id]; }
 function isUnlocked(i) {
   var d = Store.get(), M = C.missions[i];
   if (!M) return false;
-  if (M.playable === false) return false;
+  if (!isPlayable(M)) return false;
   if (d.allDoneOnce || i === 0) return true;
   /* the first playable mission is always open; then missions open in order */
-  for (var k = 0; k < i; k++) { var P = C.missions[k]; if (P.playable !== false && !(d.missions[P.id] && d.missions[P.id].completed)) return false; }
+  for (var k = 0; k < i; k++) { var P = C.missions[k]; if (isPlayable(P) && !(d.missions[P.id] && d.missions[P.id].completed)) return false; }
   return true;
 }
 

@@ -65,7 +65,7 @@ var Screens = {
       '<span class="pill grow" style="min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Your journey · ' + esc(t.short) + '</span>' +
       '<span class="pill">' + icon('star', 'var(--gold)') + stars + '/' + (C.missions.length * 3) + '</span></div>' +
       '<div class="dock" id="dock"><div class="dock-inner"><div id="m-sel"></div>' +
-        '<p class="small muted" style="margin:8px 0 0">Prototype: Mission 6 is playable. The other missions arrive in the full build.</p>' +
+        (function () { var soon = C.missions.filter(function (m) { return !isPlayable(m); }).map(function (m) { return m.number; }); return soon.length ? '<p class="small muted" style="margin:8px 0 0">Coming soon: Mission' + (soon.length > 1 ? 's ' : ' ') + soon.join(', ') + '.</p>' : ''; })() +
         '<div class="row" style="margin-top:6px"><button class="btn sm alt" id="m-rules">Critical rules</button><button class="btn sm alt" id="m-reset" style="color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad)">Reset progress</button></div>' +
       '</div></div>';
     var stopBtns = {};
@@ -75,7 +75,7 @@ var Screens = {
       $('#m-sel').innerHTML = '<div class="row"><div class="grow" style="min-width:0"><div class="small muted">' + (M === next ? 'Next stop' : 'Stop ' + M.number) + ' · ' + esc(M.place) + ' · ' + esc(M.topic) + '</div>' +
         '<b style="font-size:19px">Mission ' + M.number + ': ' + esc(M.title) + '</b>' + (rec.best ? ' ' + starsHTML(rec.best.stars) : '') + '</div>' +
         (open ? '<button class="btn big mc" id="m-play" style="--mc:' + M.color + ';--mc-text:' + textOn(M.color) + '">' + (rec.completed ? 'Replay' : 'Play') + '</button>'
-              : '<span class="chip">' + icon('lock', 'currentColor', 'width="16" height="16"') + (M.playable === false ? ' Full build' : ' Locked') + '</span>') + '</div>';
+              : '<span class="chip">' + icon('lock', 'currentColor', 'width="16" height="16"') + (!isPlayable(M) ? ' Coming soon' : ' Locked') + '</span>') + '</div>';
       if (open) $('#m-play').onclick = function () { Screens.intro(M.id); };
       GFX.refit();
     }
