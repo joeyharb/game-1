@@ -65,14 +65,15 @@ Missions.M1 = { start: function (M, ctx) {
   function goDoc(p) {
     if (st.busy || p.taken || st.phase !== 'collect' || ctx.busy) return;
     me.goTo(p.x, p.z + 0.6, function () {
-      if (p.taken || ctx.busy) return;
+      if (p.taken || ctx.busy || st.busy) return;
       p.taken = true; GFX.removeLabel(p.tag);
       var at = scr(p.x, 1.2, p.z), d = p.d;
       if (d.good) {
         st.good++;
         ctx.answer({ correct: true, id: d.id, ref: d.ref, title: d.text, why: d.why, at: at });
         dock();
-        if (st.evAt.length && st.good >= st.evAt[0] && st.evs.length) { st.evAt.shift(); var E = st.evs.shift(); later(function () { if (run && !run.ended) { st.busy = true; Kit.choice(E, { pos: MAJOK, done: function () { st.busy = false; dock(); } }); } }, 700); }
+        // busy from now, so no other pickup can redraw the dock over the event card
+        if (st.evAt.length && st.good >= st.evAt[0] && st.evs.length) { st.evAt.shift(); var E = st.evs.shift(); st.busy = true; later(function () { if (run && !run.ended) { Kit.choice(E, { pos: MAJOK, done: function () { st.busy = false; dock(); } }); } }, 700); }
       } else {
         ctx.answer({ correct: false, id: d.id, ref: d.ref, title: 'Wrong document', why: d.why, critical: d.critical, at: at, focus: [p.x, 1, p.z] });
       }
@@ -130,7 +131,7 @@ Missions.M1 = { start: function (M, ctx) {
   v.update = function (dt, t) {
     v.tween(dt);
     st.docs.forEach(function (p) { p.update(dt); });
-    me.update(dt, t, ctx.busy);
+    me.update(dt, t, ctx.busy || st.busy);
   };
   v.draw2d = function (g, Pj) {
     g.fillStyle = '#B9D27F'; g.fillRect(0, 0, Pj.W, Pj.H);

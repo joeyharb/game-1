@@ -49,7 +49,7 @@ Missions.M7 = { start: function (M, ctx) {
     });
   }
   var calTag = Kit.tag('<span id="m7-cal">Day 0 of ' + st.days + '</span>', [CAL[0], CAL[1] + 1.1, CAL[2]], null, 'target');
-  Kit.tag('Report', function () { return st.phase === 'report' || st.phase === 'call' ? [DESK[0] + 0.9, 1.6, DESK[1]] : null; });
+  Kit.tag('Report · ' + esc(C.meta.mockLabel), function () { return st.phase === 'report' || st.phase === 'call' ? [DESK[0] + 0.9, 1.6, DESK[1]] : null; });
 
   function scr(x, y, z) { return GFX.project(x, y, z); }
 

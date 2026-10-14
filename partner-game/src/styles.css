@@ -99,7 +99,7 @@ p { margin: 0 0 .6em; }
 .streak { color: #D9480F; }
 .streak.off { color: #B8C2D6; }
 .timer { font-variant-numeric: tabular-nums; }
-.phasebar { position: absolute; left: 50%; top: 60px; transform: translateX(-50%); background: rgba(20,33,61,.82); color: #fff; border-radius: 999px; padding: 4px 14px; font-weight: 800; font-size: 14px; white-space: nowrap; max-width: calc(100vw - 20px); overflow: hidden; text-overflow: ellipsis; }
+.phasebar { pointer-events: none; position: absolute; left: 50%; top: 60px; transform: translateX(-50%); background: rgba(20,33,61,.82); color: #fff; border-radius: 999px; padding: 4px 14px; font-weight: 800; font-size: 14px; white-space: nowrap; max-width: calc(100vw - 20px); overflow: hidden; text-overflow: ellipsis; }
 
 /* ---------- Bottom panel (tray, chips, choices) ---------- */
 .dock { position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 8px calc(8px + var(--safe-b)); display: flex; flex-direction: column; gap: 8px; align-items: center; }
@@ -257,6 +257,38 @@ p { margin: 0 0 .6em; }
   .topbar { gap: 5px; left: 6px; right: 6px; }
   .hud-title { min-width: 44px; }
 }
+
+.lbl.mock { background: #FFF4D6; color: #6A4B00; border: 2px dashed #C99A1E; }
+
+/* ---------- Final report ---------- */
+.mtable { width: 100%; border-collapse: collapse; }
+.mtable td { padding: 7px 6px; border-bottom: 1px solid #E6EAF2; vertical-align: middle; }
+.mtable td.n { width: 34px; }
+.mtable td.n { font-weight: 800; color: #fff; text-align: center; background: var(--mc); border-radius: 8px; }
+.mtable td.s { text-align: right; white-space: nowrap; }
+.mtable td.s svg { width: 20px; height: 20px; }
+.mtable td.p { text-align: right; width: 64px; font-weight: 700; color: var(--blue); }
+.badge.off { opacity: .55; box-shadow: none; background: #F3F5FA; }
+
+/* ---------- Completion card (screen and print) ---------- */
+.cert { border: 6px solid #0033A0; border-radius: 16px; padding: 18px 20px; background: #fff; color: #14213D; text-align: center; position: relative; }
+.cert-logos { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 48px; }
+.cert-logos img { height: 48px; width: auto; }
+.logo-ph.dark { color: #0033A0; border-color: #0033A0; background: #E6EEFA; height: 46px; min-width: 70px; }
+.cert-kicker { margin-top: 10px; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #0033A0; }
+.cert-name { font-size: 30px; font-weight: 900; margin-top: 6px; line-height: 1.15; overflow-wrap: anywhere; }
+.cert-org { font-size: 16px; font-weight: 700; color: #4A5875; margin-top: 2px; overflow-wrap: anywhere; }
+.cert-text { margin: 10px auto; max-width: 520px; }
+.cert-stats { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.cert-stats div { background: #E6EEFA; border-radius: 10px; padding: 6px 12px; min-width: 90px; }
+.cert-stats b { display: block; font-size: 18px; color: #0033A0; }
+.cert-stats span { font-size: 12px; color: #4A5875; font-weight: 700; }
+.cert-missions { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2px 14px; margin: 12px 0 6px; text-align: left; font-size: 13px; }
+.cert-missions div { display: flex; justify-content: space-between; align-items: center; gap: 6px; border-bottom: 1px dotted #C5CEDD; padding: 2px 0; }
+.cert-missions svg { width: 15px; height: 15px; }
+.cert-note { margin-top: 10px; font-weight: 800; color: #C62E2E; }
+.cert-foot { font-size: 11px; color: #7A859C; margin-top: 4px; }
+@media print { .cert { border-width: 4px; max-width: 250mm; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 
 /* ---------- Completion card (print) ---------- */
 #print-card { display: none; }

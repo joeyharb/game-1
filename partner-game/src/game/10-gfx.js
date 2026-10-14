@@ -195,6 +195,17 @@ var GFX = (function () {
     }
   }
 
+  /* Keep labels inside the free screen area: below the HUD, above the dock, inside the sides. */
+  function clampLabels() {
+    var f = (view && view.fit) || {}, top = typeof f.top === 'function' ? f.top(W) : (f.top || 0), bot = typeof f.bottom === 'function' ? f.bottom() : (f.bottom || 0);
+    var minY = Math.max(0, top - 14), maxY = H - bot;
+    for (var i = 0; i < labels.length; i++) {
+      var L = labels[i]; if (!L.vis) continue;
+      L.x = Math.min(Math.max(L.x, 4), W - L.w - 4);
+      if (maxY - minY > L.h) L.y = Math.min(Math.max(L.y, minY), maxY - L.h);
+    }
+  }
+
   /* ---------- Main loop ---------- */
   var cpuMs = 0, cpuN = 0, cpuAvg = 0, realT = 0, realFrames = 0;
   var timeScale = (function () { var m = /[?&]timescale=([0-9.]+)/.exec(location.search); return m ? Math.min(8, Math.max(0.1, Number(m[1]))) : 1; })();
@@ -213,7 +224,7 @@ var GFX = (function () {
     if (mode === 'webgl' && view.scene && view.camera) renderer.render(view.scene, view.camera);
     else if (mode === '2d' && view.draw2d) { ctx2.clearRect(0, 0, W, H); view.draw2d(ctx2, { project: project, s: map2d.s, rot: map2d.rot, W: W, H: H }); }
     for (var i = 0; i < labels.length; i++) placeLabel(labels[i]);
-    separate();
+    separate(); clampLabels();
     for (var j = 0; j < labels.length; j++) applyLabel(labels[j]);
     cpuMs += performance.now() - t0; cpuN++;
   }

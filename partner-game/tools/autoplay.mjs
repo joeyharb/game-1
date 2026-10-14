@@ -37,12 +37,13 @@ await wait(1200); await shot('01-start');
 const clickText = async (sel, text) => { for (const el of await page.$$(sel)) { if (!(await el.isVisible())) continue; const t = (await el.textContent()).replace(/\s+/g, ' ').trim(); if (t === text || t.includes(text)) { try { await el.click({ timeout: 800, force: true }); return true; } catch (e) { return false; } } } return false; };
 async function answerChoice() {
   const has = await page.$('#ev-opts .opt:not([disabled])'); if (!has) return false;
-  const idx = await page.evaluate((wrong) => { const E = window.LMH.run().debug.cur; const btns = Array.from(document.querySelectorAll('#ev-opts .opt')).filter((b) => !b.disabled);
+  const idx = await page.evaluate(([wrong, crit]) => { const E = window.LMH.run().debug.cur; const btns = Array.from(document.querySelectorAll('#ev-opts .opt')).filter((b) => !b.disabled);
     let i = btns.findIndex((b) => E.options[Number(b.dataset.i)].correct);
     if (wrong) { const j = btns.findIndex((b) => { const o = E.options[Number(b.dataset.i)]; return !o.correct && !o.critical; }); if (j >= 0) i = j; }
-    return Number(btns[i].dataset.i); }, wrongLeft > 0);
+    if (crit) { const j = btns.findIndex((b) => E.options[Number(b.dataset.i)].critical); if (j >= 0) i = j; }
+    return Number(btns[i].dataset.i); }, [wrongLeft > 0, mode === 'critical']);
   await shot('02-choice');
-  await page.click(`#ev-opts .opt[data-i="${idx}"]`); if (wrongLeft > 0) { wrongLeft--; await wait(300); await shot('03-wrong-feedback'); }
+  await page.click(`#ev-opts .opt[data-i="${idx}"]`); if (mode === 'critical') { await wait(1500); await shot('08-critical'); } if (wrongLeft > 0) { wrongLeft--; await wait(300); await shot('03-wrong-feedback'); }
   await wait(500); return true;
 }
 const state = () => page.evaluate(() => { const r = window.LMH.run(); return { page: !!document.querySelector('.page'), ended: !r || r.ended, phase: r && r.debug && r.debug.st ? r.debug.st.phase : '', busy: r && r.debug && r.debug.st ? !!r.debug.st.busy : false }; });
@@ -50,6 +51,7 @@ const state = () => page.evaluate(() => { const r = window.LMH.run(); return { p
 const t0 = Date.now(); let n = 0;
 while (Date.now() - t0 < 420000) {
   const s = await state(); if (s.page) break;
+  if (await page.$('#crit-ok')) { await shot('08-critical-modal'); await page.click('#crit-ok'); await wait(800); continue; }
   if (await answerChoice()) continue;
   n++;
   if (mission === 'M1') {
@@ -61,7 +63,7 @@ while (Date.now() - t0 < 420000) {
   } else if (mission === 'M2') {
     const b = await page.$('.bub[aria-label="Visit this household"]');
     const busy = await page.evaluate(() => window.LMH.run().debug.st.busy);
-    if (b && !busy) { try { await b.click({ timeout: 800 }); } catch (e) {} await wait(1500); await shot('04-visit'); }
+    if (b && !busy) { try { await b.click({ timeout: 800, force: true }); } catch (e) {} await wait(1500); await shot('04-visit'); }
   } else if (mission === 'M3') {
     const nx = await page.evaluate(() => { const r = window.LMH.run(), st = r.debug.st; if (st.phase !== 'build') return { phase: st.phase };
       const slot = r.debug.M.slots.find((s) => !st.filled[s.id]); if (slot) { const p = st.pieces.find((x) => x.slot === slot.id && x.ok && !x.used); return { phase: 'build', piece: p.id, slot: slot.label }; }
@@ -98,7 +100,7 @@ while (Date.now() - t0 < 420000) {
 }
 await wait(2600); await shot('09-results');
 const res = await page.evaluate((m) => { const L = window.LMH.store().missions[m]; return { title: document.querySelector('.page h2') && document.querySelector('.page h2').textContent, last: L && L.last }; }, mission);
-log(tag, '→', res.title, res.last ? `score ${res.last.score} ${res.last.correct}/${res.last.total} stars ${res.last.stars} livesLost ${res.last.livesLost}` : '(no result)');
+log(tag, '→', res.title, res.last ? `${res.last.status} score ${res.last.score} ${res.last.correct}/${res.last.total} stars ${res.last.stars} livesLost ${res.last.livesLost}` : '(no result)');
 log('errors:', errors.length ? errors : 'none');
 await browser.close();
 process.exit(errors.length || !res.last ? 1 : 0);

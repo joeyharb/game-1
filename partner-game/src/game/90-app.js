@@ -1,7 +1,7 @@
 /* =============================================================================
  * 90 SCREENS: home, map, mission intro, results. Boot.
  * ========================================================================== */
-var BADGE_ICON = { 'site-boss': 'star', 'flawless': 'shield', 'hot-streak': 'flame', 'rule-keeper': 'lock' };
+var BADGE_ICON = { 'site-boss': 'star', 'flawless': 'shield', 'hot-streak': 'flame', 'rule-keeper': 'lock', 'last-mile-hero': 'truck' };
 function logoHTML(key, label) {
   var src = (C.logos || {})[key];
   return src ? '<img src="' + esc(src) + '" alt="' + esc(label) + ' logo">' : '<span class="logo-ph" title="Add the official logo in CONTENT.logos">' + esc(label) + '<br>logo</span>';
@@ -63,10 +63,10 @@ var Screens = {
     if (!next) C.missions.forEach(function (M, i) { if (!next && isUnlocked(i)) next = M; });
     ui().innerHTML = '<div class="topbar"><button class="icon-btn" id="m-home" aria-label="Home and settings">' + icon('map') + '</button>' +
       '<span class="pill grow" style="min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Your journey · ' + esc(t.short) + '</span>' +
-      '<span class="pill">' + icon('star', 'var(--gold)') + stars + '/' + (C.missions.length * 3) + '</span></div>' +
+      '<span class="pill">' + icon('star', 'var(--gold)') + stars + '/' + (C.missions.filter(isPlayable).length * 3) + '</span></div>' +
       '<div class="dock" id="dock"><div class="dock-inner"><div id="m-sel"></div>' +
         (function () { var soon = C.missions.filter(function (m) { return !isPlayable(m); }).map(function (m) { return m.number; }); return soon.length ? '<p class="small muted" style="margin:8px 0 0">Coming soon: Mission' + (soon.length > 1 ? 's ' : ' ') + soon.join(', ') + '.</p>' : ''; })() +
-        '<div class="row" style="margin-top:6px"><button class="btn sm alt" id="m-rules">Critical rules</button><button class="btn sm alt" id="m-reset" style="color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad)">Reset progress</button></div>' +
+        '<div class="row" style="margin-top:6px"><button class="btn sm alt" id="m-report">My report</button><button class="btn sm alt" id="m-rules">Critical rules</button><button class="btn sm alt" id="m-reset" style="color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad)">Reset progress</button></div>' +
       '</div></div>';
     var stopBtns = {};
     function showSel(M) {
@@ -92,8 +92,12 @@ var Screens = {
     showSel(next || C.missions[0]);
     $('#m-home').onclick = Screens.home;
     $('#m-rules').onclick = showRules;
+    $('#m-report').onclick = Screens.final;
     $('#m-reset').onclick = function () { confirmModal('Reset progress?', 'This clears scores, stars, badges and unlocks on this device. Your name, organisation, state and track are kept.', 'Reset', function () { Store.reset(); Screens.map(); }); };
   },
+
+  /* ---------------- Final report (85-final.js) ---------------- */
+  final: function () { finalReport(); },
 
   /* ---------------- Mission intro ---------------- */
   intro: function (id) {
@@ -117,7 +121,7 @@ var Screens = {
     var title = done ? 'Mission complete!' : (rec.status === 'critical' ? 'Stopped by a critical rule' : 'Out of lives');
     var line = done ? (rec.stars === 3 ? 'Outstanding. A fair, safe and free distribution.' : 'Well done. Check the topics below, then try for three stars.')
                     : (rec.status === 'critical' ? 'That rule protects people and the pipeline. Read it once more, then go again.' : 'Three slips and the day stops. Review the topics below and try again.');
-    var weak = groupRefs(rec.mistakes);
+    var weak = groupRefs(rec.mistakes), allDone = journeySummary().all;
     ui().innerHTML = '<div class="page"><section class="card" style="text-align:center">' +
       '<h2 style="font-size:30px">' + esc(title) + '</h2>' +
       (done ? '<div class="big-stars">' + [0, 1, 2].map(function (i) { return '<span class="' + (i < rec.stars ? 'on' : '') + '">' + icon('star', i < rec.stars ? 'var(--gold)' : '#D5DDEB') + '</span>'; }).join('') + '</div>' : '') +
@@ -129,11 +133,12 @@ var Screens = {
       (weak.length ? '<div style="text-align:left;margin-top:10px"><h3>Topics to review</h3><ul class="review">' + weak.map(function (w) { return '<li><span class="ref">' + esc(w.ref) + '</span> ' + w.count + ' slip' + (w.count > 1 ? 's' : '') + '</li>'; }).join('') + '</ul></div>' : '<p style="margin-top:10px"><b>No slips.</b> Every move was right.</p>') +
       (newBadges.length ? '<div style="text-align:left"><h3>New badge' + (newBadges.length > 1 ? 's' : '') + '</h3><div class="badges">' + newBadges.map(function (b) { return '<div class="badge new">' + icon(BADGE_ICON[b.id] || 'star', 'var(--blue)') + '<b>' + esc(b.title) + '</b>' + esc(b.desc) + '</div>'; }).join('') + '</div></div>' : '') +
       (newUnlocks.length ? '<div style="text-align:left;margin-top:10px"><h3>Unlocked</h3>' + newUnlocks.map(function (u) { return '<div class="row" style="margin-bottom:6px">' + (u.kind === 'truckColor' ? '<span style="width:28px;height:28px;border-radius:8px;background:' + u.value + ';display:inline-block"></span>' : icon('banner', C.ngo.color, 'width="28" height="28"')) + '<b class="grow">' + esc(u.label) + '</b>' + (u.kind === 'truckColor' ? '<button class="btn sm" data-equip="' + u.value + '">Use it</button>' : '<span class="small muted">On your compound</span>') + '</div>'; }).join('') + '</div>' : '') +
-      '<div class="actions" style="justify-content:center"><button class="btn alt" id="r-map">Map</button><button class="btn mc big" id="r-again">' + (done ? 'Play again' : 'Try again') + '</button></div>' +
+      '<div class="actions" style="justify-content:center"><button class="btn alt" id="r-map">Map</button><button class="btn ' + (allDone ? 'alt' : 'mc big') + '" id="r-again">' + (done ? 'Play again' : 'Try again') + '</button>' + (allDone ? '<button class="btn big" id="r-final">Final report</button>' : '') + '</div>' +
       '</section></div>';
     if (done) { Sound.fanfare(); confetti(); }
     $$('[data-equip]').forEach(function (b) { b.onclick = function () { Store.get().truckColor = b.getAttribute('data-equip'); Store.save(); b.textContent = 'In use'; b.disabled = true; }; });
     $('#r-map').onclick = Screens.map;
+    if (allDone) $('#r-final').onclick = Screens.final;
     $('#r-again').onclick = function () { startMission(M.id); };
     var w = makeWorldView({ top: 0, bottom: 0 }); GFX.setView(w);
   }

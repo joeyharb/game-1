@@ -41,6 +41,7 @@ Missions.M3 = { start: function (M, ctx) {
     var lual = M3.person({ skin: '#6B4226', shirt: '#0033A0', hair: 'cap', hairColor: '#0033A0' }); lual.position.set(0, 0, 1.6); v.scene.add(lual);
     st.env = M3.mesh([M3.part(M3.G.box(0.9, 0.08, 0.6), '#FFFFFF'), M3.part(M3.G.box(0.5, 0.09, 0.08), '#19A7E0', [0, 0, -0.1])]); st.env.position.set(-9, 1.2, GZ); st.env.visible = false; v.scene.add(st.env);
   }
+  Kit.tag('Request form · ' + esc(C.meta.mockLabel), function () { return st.phase === 'build' ? [BOARD.x, 4.1, BOARD.z] : null; }, null, 'mock');
   Kit.tag('Not to scale', function () { return st.phase === 'build' ? [MAP.x, 1.2, MAP.z + 3.6] : null; });
   hubs.forEach(function (h) { h.label = Kit.tag(esc(h.id), function () { return st.phase === 'build' ? [MAP.x + h.x * 0.85, 1.9, MAP.z + h.z * 0.85] : null; }, function () { tapHub(h); }); });
   M.slots.forEach(function (s) {

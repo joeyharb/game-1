@@ -32,9 +32,10 @@ window.CONTENT = {
   meta: {
     title: 'Last Mile Heroes',
     subtitle: 'Partner onboarding game for the IOM South Sudan Core Pipeline (SNFI and WASH)',
-    version: '0.6 (Missions 1-7)',
+    version: '1.0',
     sourceNote: 'Based on the IOM South Sudan Core Pipeline SOP (Draft 1, September 2026), the CP Distribution Agreement 2026 and its annexes, and the WASH Cluster Core Pipeline SOP (January 2026).',
-    cardNote: 'Training record, not a certification.'
+    cardNote: 'Training record, not a certification.',
+    mockLabel: 'Training example'   // shown on every mock form in the game
   },
 
   settings: {
@@ -201,7 +202,8 @@ window.CONTENT = {
     { id: 'site-boss',  title: 'Site Boss',     rule: 'missionDone:M6', desc: 'Ran a full distribution day.' },
     { id: 'flawless',   title: 'Flawless',      rule: 'flawless',       desc: 'Finished a mission without losing a life.' },
     { id: 'hot-streak', title: 'Hot Streak',    rule: 'streak:8',       desc: 'Eight right moves in a row.' },
-    { id: 'rule-keeper', title: 'Rule Keeper',  rule: 'noCritical',     desc: 'Every attempt so far without breaking a critical rule.' }
+    { id: 'rule-keeper', title: 'Rule Keeper',  rule: 'noCritical',     desc: 'Every attempt so far without breaking a critical rule.' },
+    { id: 'last-mile-hero', title: 'Last Mile Hero', rule: 'allMissions', desc: 'Finished every mission.' }
   ],
 
   /* Unlockables shown on the NGO compound and the truck. */
@@ -212,8 +214,8 @@ window.CONTENT = {
   ],
 
   /* ---------------------------------------------------------------------------
-   * MISSIONS (the journey). Only Mission 6 is playable in this prototype; the
-   * other six show on the map and are built in the full version.
+   * MISSIONS (the journey), in map order. A mission shows on the map only
+   * when its game code exists; set playable: false to hide one. See README.md.
    * ------------------------------------------------------------------------- */
   missions: [
     /* =========================================================================

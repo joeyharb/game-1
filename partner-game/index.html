@@ -108,7 +108,7 @@ p { margin: 0 0 .6em; }
 .streak { color: #D9480F; }
 .streak.off { color: #B8C2D6; }
 .timer { font-variant-numeric: tabular-nums; }
-.phasebar { position: absolute; left: 50%; top: 60px; transform: translateX(-50%); background: rgba(20,33,61,.82); color: #fff; border-radius: 999px; padding: 4px 14px; font-weight: 800; font-size: 14px; white-space: nowrap; max-width: calc(100vw - 20px); overflow: hidden; text-overflow: ellipsis; }
+.phasebar { pointer-events: none; position: absolute; left: 50%; top: 60px; transform: translateX(-50%); background: rgba(20,33,61,.82); color: #fff; border-radius: 999px; padding: 4px 14px; font-weight: 800; font-size: 14px; white-space: nowrap; max-width: calc(100vw - 20px); overflow: hidden; text-overflow: ellipsis; }
 
 /* ---------- Bottom panel (tray, chips, choices) ---------- */
 .dock { position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 8px calc(8px + var(--safe-b)); display: flex; flex-direction: column; gap: 8px; align-items: center; }
@@ -267,6 +267,38 @@ p { margin: 0 0 .6em; }
   .hud-title { min-width: 44px; }
 }
 
+.lbl.mock { background: #FFF4D6; color: #6A4B00; border: 2px dashed #C99A1E; }
+
+/* ---------- Final report ---------- */
+.mtable { width: 100%; border-collapse: collapse; }
+.mtable td { padding: 7px 6px; border-bottom: 1px solid #E6EAF2; vertical-align: middle; }
+.mtable td.n { width: 34px; }
+.mtable td.n { font-weight: 800; color: #fff; text-align: center; background: var(--mc); border-radius: 8px; }
+.mtable td.s { text-align: right; white-space: nowrap; }
+.mtable td.s svg { width: 20px; height: 20px; }
+.mtable td.p { text-align: right; width: 64px; font-weight: 700; color: var(--blue); }
+.badge.off { opacity: .55; box-shadow: none; background: #F3F5FA; }
+
+/* ---------- Completion card (screen and print) ---------- */
+.cert { border: 6px solid #0033A0; border-radius: 16px; padding: 18px 20px; background: #fff; color: #14213D; text-align: center; position: relative; }
+.cert-logos { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 48px; }
+.cert-logos img { height: 48px; width: auto; }
+.logo-ph.dark { color: #0033A0; border-color: #0033A0; background: #E6EEFA; height: 46px; min-width: 70px; }
+.cert-kicker { margin-top: 10px; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #0033A0; }
+.cert-name { font-size: 30px; font-weight: 900; margin-top: 6px; line-height: 1.15; overflow-wrap: anywhere; }
+.cert-org { font-size: 16px; font-weight: 700; color: #4A5875; margin-top: 2px; overflow-wrap: anywhere; }
+.cert-text { margin: 10px auto; max-width: 520px; }
+.cert-stats { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.cert-stats div { background: #E6EEFA; border-radius: 10px; padding: 6px 12px; min-width: 90px; }
+.cert-stats b { display: block; font-size: 18px; color: #0033A0; }
+.cert-stats span { font-size: 12px; color: #4A5875; font-weight: 700; }
+.cert-missions { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2px 14px; margin: 12px 0 6px; text-align: left; font-size: 13px; }
+.cert-missions div { display: flex; justify-content: space-between; align-items: center; gap: 6px; border-bottom: 1px dotted #C5CEDD; padding: 2px 0; }
+.cert-missions svg { width: 15px; height: 15px; }
+.cert-note { margin-top: 10px; font-weight: 800; color: #C62E2E; }
+.cert-foot { font-size: 11px; color: #7A859C; margin-top: 4px; }
+@media print { .cert { border-width: 4px; max-width: 250mm; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+
 /* ---------- Completion card (print) ---------- */
 #print-card { display: none; }
 @media print {
@@ -325,9 +357,10 @@ window.CONTENT = {
   meta: {
     title: 'Last Mile Heroes',
     subtitle: 'Partner onboarding game for the IOM South Sudan Core Pipeline (SNFI and WASH)',
-    version: '0.6 (Missions 1-7)',
+    version: '1.0',
     sourceNote: 'Based on the IOM South Sudan Core Pipeline SOP (Draft 1, September 2026), the CP Distribution Agreement 2026 and its annexes, and the WASH Cluster Core Pipeline SOP (January 2026).',
-    cardNote: 'Training record, not a certification.'
+    cardNote: 'Training record, not a certification.',
+    mockLabel: 'Training example'   // shown on every mock form in the game
   },
 
   settings: {
@@ -494,7 +527,8 @@ window.CONTENT = {
     { id: 'site-boss',  title: 'Site Boss',     rule: 'missionDone:M6', desc: 'Ran a full distribution day.' },
     { id: 'flawless',   title: 'Flawless',      rule: 'flawless',       desc: 'Finished a mission without losing a life.' },
     { id: 'hot-streak', title: 'Hot Streak',    rule: 'streak:8',       desc: 'Eight right moves in a row.' },
-    { id: 'rule-keeper', title: 'Rule Keeper',  rule: 'noCritical',     desc: 'Every attempt so far without breaking a critical rule.' }
+    { id: 'rule-keeper', title: 'Rule Keeper',  rule: 'noCritical',     desc: 'Every attempt so far without breaking a critical rule.' },
+    { id: 'last-mile-hero', title: 'Last Mile Hero', rule: 'allMissions', desc: 'Finished every mission.' }
   ],
 
   /* Unlockables shown on the NGO compound and the truck. */
@@ -505,8 +539,8 @@ window.CONTENT = {
   ],
 
   /* ---------------------------------------------------------------------------
-   * MISSIONS (the journey). Only Mission 6 is playable in this prototype; the
-   * other six show on the map and are built in the full version.
+   * MISSIONS (the journey), in map order. A mission shows on the map only
+   * when its game code exists; set playable: false to hide one. See README.md.
    * ------------------------------------------------------------------------- */
   missions: [
     /* =========================================================================
@@ -5524,6 +5558,17 @@ var GFX = (function () {
     }
   }
 
+  /* Keep labels inside the free screen area: below the HUD, above the dock, inside the sides. */
+  function clampLabels() {
+    var f = (view && view.fit) || {}, top = typeof f.top === 'function' ? f.top(W) : (f.top || 0), bot = typeof f.bottom === 'function' ? f.bottom() : (f.bottom || 0);
+    var minY = Math.max(0, top - 14), maxY = H - bot;
+    for (var i = 0; i < labels.length; i++) {
+      var L = labels[i]; if (!L.vis) continue;
+      L.x = Math.min(Math.max(L.x, 4), W - L.w - 4);
+      if (maxY - minY > L.h) L.y = Math.min(Math.max(L.y, minY), maxY - L.h);
+    }
+  }
+
   /* ---------- Main loop ---------- */
   var cpuMs = 0, cpuN = 0, cpuAvg = 0, realT = 0, realFrames = 0;
   var timeScale = (function () { var m = /[?&]timescale=([0-9.]+)/.exec(location.search); return m ? Math.min(8, Math.max(0.1, Number(m[1]))) : 1; })();
@@ -5542,7 +5587,7 @@ var GFX = (function () {
     if (mode === 'webgl' && view.scene && view.camera) renderer.render(view.scene, view.camera);
     else if (mode === '2d' && view.draw2d) { ctx2.clearRect(0, 0, W, H); view.draw2d(ctx2, { project: project, s: map2d.s, rot: map2d.rot, W: W, H: H }); }
     for (var i = 0; i < labels.length; i++) placeLabel(labels[i]);
-    separate();
+    separate(); clampLabels();
     for (var j = 0; j < labels.length; j++) applyLabel(labels[j]);
     cpuMs += performance.now() - t0; cpuN++;
   }
@@ -6292,14 +6337,15 @@ Missions.M1 = { start: function (M, ctx) {
   function goDoc(p) {
     if (st.busy || p.taken || st.phase !== 'collect' || ctx.busy) return;
     me.goTo(p.x, p.z + 0.6, function () {
-      if (p.taken || ctx.busy) return;
+      if (p.taken || ctx.busy || st.busy) return;
       p.taken = true; GFX.removeLabel(p.tag);
       var at = scr(p.x, 1.2, p.z), d = p.d;
       if (d.good) {
         st.good++;
         ctx.answer({ correct: true, id: d.id, ref: d.ref, title: d.text, why: d.why, at: at });
         dock();
-        if (st.evAt.length && st.good >= st.evAt[0] && st.evs.length) { st.evAt.shift(); var E = st.evs.shift(); later(function () { if (run && !run.ended) { st.busy = true; Kit.choice(E, { pos: MAJOK, done: function () { st.busy = false; dock(); } }); } }, 700); }
+        // busy from now, so no other pickup can redraw the dock over the event card
+        if (st.evAt.length && st.good >= st.evAt[0] && st.evs.length) { st.evAt.shift(); var E = st.evs.shift(); st.busy = true; later(function () { if (run && !run.ended) { Kit.choice(E, { pos: MAJOK, done: function () { st.busy = false; dock(); } }); } }, 700); }
       } else {
         ctx.answer({ correct: false, id: d.id, ref: d.ref, title: 'Wrong document', why: d.why, critical: d.critical, at: at, focus: [p.x, 1, p.z] });
       }
@@ -6357,7 +6403,7 @@ Missions.M1 = { start: function (M, ctx) {
   v.update = function (dt, t) {
     v.tween(dt);
     st.docs.forEach(function (p) { p.update(dt); });
-    me.update(dt, t, ctx.busy);
+    me.update(dt, t, ctx.busy || st.busy);
   };
   v.draw2d = function (g, Pj) {
     g.fillStyle = '#B9D27F'; g.fillRect(0, 0, Pj.W, Pj.H);
@@ -6515,6 +6561,7 @@ Missions.M3 = { start: function (M, ctx) {
     var lual = M3.person({ skin: '#6B4226', shirt: '#0033A0', hair: 'cap', hairColor: '#0033A0' }); lual.position.set(0, 0, 1.6); v.scene.add(lual);
     st.env = M3.mesh([M3.part(M3.G.box(0.9, 0.08, 0.6), '#FFFFFF'), M3.part(M3.G.box(0.5, 0.09, 0.08), '#19A7E0', [0, 0, -0.1])]); st.env.position.set(-9, 1.2, GZ); st.env.visible = false; v.scene.add(st.env);
   }
+  Kit.tag('Request form · ' + esc(C.meta.mockLabel), function () { return st.phase === 'build' ? [BOARD.x, 4.1, BOARD.z] : null; }, null, 'mock');
   Kit.tag('Not to scale', function () { return st.phase === 'build' ? [MAP.x, 1.2, MAP.z + 3.6] : null; });
   hubs.forEach(function (h) { h.label = Kit.tag(esc(h.id), function () { return st.phase === 'build' ? [MAP.x + h.x * 0.85, 1.9, MAP.z + h.z * 0.85] : null; }, function () { tapHub(h); }); });
   M.slots.forEach(function (s) {
@@ -6971,7 +7018,7 @@ Missions.M7 = { start: function (M, ctx) {
     });
   }
   var calTag = Kit.tag('<span id="m7-cal">Day 0 of ' + st.days + '</span>', [CAL[0], CAL[1] + 1.1, CAL[2]], null, 'target');
-  Kit.tag('Report', function () { return st.phase === 'report' || st.phase === 'call' ? [DESK[0] + 0.9, 1.6, DESK[1]] : null; });
+  Kit.tag('Report · ' + esc(C.meta.mockLabel), function () { return st.phase === 'report' || st.phase === 'call' ? [DESK[0] + 0.9, 1.6, DESK[1]] : null; });
 
   function scr(x, y, z) { return GFX.project(x, y, z); }
 
@@ -7606,9 +7653,121 @@ Missions.M6 = { start: function (M, ctx) {
 } };
 
 /* =============================================================================
+ * 85 END OF THE GAME: final report, completion card (printable), CSV export
+ * ========================================================================== */
+
+/* Everything the end screens need, read from the saved progress. */
+function journeySummary() {
+  var d = Store.get(), list = C.missions.filter(isPlayable), mistakes = [], score = 0, stars = 0, done = 0;
+  var rows = list.map(function (M) {
+    var mr = d.missions[M.id] || {}, best = mr.best || null;
+    if (mr.completed) done++;
+    if (best) { score += best.score; stars += best.stars; }
+    // topics to review come from the latest attempt at each mission
+    if (mr.last && mr.last.mistakes) mistakes = mistakes.concat(mr.last.mistakes);
+    return { M: M, completed: !!mr.completed, score: best ? best.score : 0, stars: best ? best.stars : 0, last: mr.last || null };
+  });
+  var lastDate = null;
+  rows.forEach(function (r) { if (r.last && r.last.finishedAt && (!lastDate || r.last.finishedAt > lastDate)) lastDate = r.last.finishedAt; });
+  return { d: d, rows: rows, score: score, stars: stars, maxStars: rows.length * 3, done: done, all: rows.length > 0 && done === rows.length,
+           topics: groupRefs(mistakes), date: lastDate ? new Date(lastDate) : new Date() };
+}
+function longDate(dt) { try { return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return dt.toISOString().slice(0, 10); } }
+function isoDate(dt) { var p = function (n) { return (n < 10 ? '0' : '') + n; }; return dt.getFullYear() + '-' + p(dt.getMonth() + 1) + '-' + p(dt.getDate()); }
+
+/* ---------------- Final report screen ---------------- */
+function finalReport() {
+  run = null; clearScreenTimers(); clearUI(); resetAcronyms();
+  setMissionColor(document.body, '#0033A0');
+  var J = journeySummary(), p = J.d.player, t = track();
+  ui().innerHTML = '<div class="page"><section class="card">' +
+    '<h2 style="font-size:28px;margin-bottom:2px">' + (J.all ? 'Journey complete!' : 'Your journey so far') + '</h2>' +
+    '<p class="muted" style="margin-top:0">' + esc(p.name || 'Player') + ' · ' + esc(p.org || '') + ' · ' + esc(t.short) + ' track</p>' +
+    '<div class="stats"><div class="stat"><b>' + fmtNum(J.score) + '</b><span>Points (best runs)</span></div>' +
+      '<div class="stat"><b>' + J.stars + '/' + J.maxStars + '</b><span>Stars</span></div>' +
+      '<div class="stat"><b>' + J.done + '/' + J.rows.length + '</b><span>Missions done</span></div></div>' +
+    '<h3 style="margin-top:14px">Stars per mission</h3><table class="mtable"><tbody>' +
+      J.rows.map(function (r) { return '<tr><td class="n" style="--mc:' + r.M.color + '">' + r.M.number + '</td><td>' + esc(r.M.title) + '</td><td class="s">' + (r.completed ? starsHTML(r.stars) : '<span class="small muted">' + (r.last ? 'Not finished yet' : 'Not played yet') + '</span>') + '</td><td class="p">' + (r.completed ? fmtNum(r.score) : '') + '</td></tr>'; }).join('') +
+    '</tbody></table>' +
+    '<h3 style="margin-top:14px">Topics to review</h3>' +
+      (J.topics.length ? '<p class="small muted" style="margin-top:0">From your latest try at each mission, by source section.</p><ul class="review">' + J.topics.map(function (w) { return '<li><span class="ref">' + esc(w.ref) + '</span> ' + w.count + ' slip' + (w.count > 1 ? 's' : '') + '</li>'; }).join('') + '</ul>'
+                      : '<p><b>Nothing to review.</b> Your latest tries had no slips.</p>') +
+    '<h3 style="margin-top:14px">Badges</h3><div class="badges">' +
+      C.badges.map(function (b) { var on = J.d.badges.indexOf(b.id) >= 0; return '<div class="badge' + (on ? '' : ' off') + '">' + icon(BADGE_ICON[b.id] || 'star', on ? 'var(--blue)' : '#C5CEDD') + '<b>' + esc(b.title) + '</b>' + esc(b.desc) + '</div>'; }).join('') + '</div>' +
+    '<div class="actions" style="justify-content:center;margin-top:16px;flex-wrap:wrap">' +
+      '<button class="btn alt" id="f-map">Map</button>' +
+      '<button class="btn alt" id="f-csv">Download results (CSV)</button>' +
+      '<button class="btn big" id="f-card"' + (J.all ? '' : ' disabled') + '>Completion card</button></div>' +
+    (J.all ? '' : '<p class="small muted" style="text-align:center">Finish all ' + J.rows.length + ' missions to get your completion card.</p>') +
+    '</section></div>';
+  if (J.all) { Sound.fanfare(); confetti(); }
+  $('#f-map').onclick = Screens.map;
+  $('#f-csv').onclick = exportCSV;
+  $('#f-card').onclick = function () { if (J.all) completionCard(); };
+  GFX.setView(makeWorldView({ top: 0, bottom: 0 }));
+}
+
+/* ---------------- Completion card ---------------- */
+function cardHTML(J) {
+  var p = J.d.player, t = track(), trk = J.d.track === 'WASH' ? 'WASH' : 'SNFI';
+  var dark = function (key, label) { var src = (C.logos || {})[key]; return src ? '<img src="' + esc(src) + '" alt="' + esc(label) + ' logo">' : '<span class="logo-ph dark" title="Add the official logo in CONTENT.logos">' + esc(label) + '<br>logo</span>'; };
+  return '<div class="cert">' +
+    '<div class="cert-logos">' + dark('iom', 'IOM') + dark(trk === 'WASH' ? 'wash' : 'slsc', t.cluster) + '</div>' +
+    '<div class="cert-kicker">' + esc(C.meta.title) + ' · Completion card</div>' +
+    '<div class="cert-name">' + esc(p.name || '') + '</div>' +
+    '<div class="cert-org">' + esc(p.org || '') + ' · ' + esc(p.state || '') + '</div>' +
+    '<p class="cert-text">completed the partner onboarding game for the IOM South Sudan Core Pipeline, <b>' + esc(t.short) + ' track</b>.</p>' +
+    '<div class="cert-stats"><div><b>' + fmtNum(J.score) + '</b><span>Points</span></div><div><b>' + J.stars + '/' + J.maxStars + '</b><span>Stars</span></div><div><b>' + esc(longDate(J.date)) + '</b><span>Date</span></div></div>' +
+    '<div class="cert-missions">' + J.rows.map(function (r) { return '<div><span>' + r.M.number + '. ' + esc(r.M.title) + '</span>' + starsHTML(r.stars) + '</div>'; }).join('') + '</div>' +
+    '<div class="cert-note">' + esc(C.meta.cardNote) + '</div>' +
+    '<div class="cert-foot">Game version ' + esc(C.meta.version) + '</div>' +
+  '</div>';
+}
+function completionCard() {
+  var J = journeySummary();
+  openModal('<div class="modal-head mc"><h2>Your completion card</h2></div><div class="modal-body">' + cardHTML(J) +
+    '<div class="actions"><button class="btn alt" id="c-close">Close</button><button class="btn big" id="c-print">Print or save as PDF</button></div></div>', { onEscape: closeModal });
+  $('#c-close').onclick = closeModal;
+  $('#c-print').onclick = function () {
+    var pc = $('#print-card'); pc.innerHTML = cardHTML(J);
+    try { window.print(); } catch (e) { toast('Printing is not available here. Take a screenshot of the card instead.', 'info', 4000); }
+  };
+}
+
+/* ---------------- CSV export ---------------- */
+function csvCell(v) {
+  var s = String(v == null ? '' : v);
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;                  // a spreadsheet must not run it as a formula
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function resultsCSV() {
+  var J = journeySummary(), p = J.d.player, t = track();
+  var head = ['Name', 'Organisation', 'State', 'Track', 'Date', 'Total score', 'Total stars', 'Missions completed'];
+  var row = [p.name, p.org, p.state, t.short, isoDate(J.date), J.score, J.stars, J.done + '/' + J.rows.length];
+  J.rows.forEach(function (r) { head.push('M' + r.M.number + ' ' + r.M.title + ' stars', 'M' + r.M.number + ' score'); row.push(r.completed ? r.stars : '', r.completed ? r.score : ''); });
+  head.push('Game version'); row.push(C.meta.version);
+  return '﻿' + head.map(csvCell).join(',') + '\r\n' + row.map(csvCell).join(',') + '\r\n';
+}
+function exportCSV() {
+  var csv = resultsCSV(), p = Store.get().player;
+  var name = 'LastMileHeroes_' + String(p.name || 'player').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '') + '_' + isoDate(new Date()) + '.csv';
+  try {
+    var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    var a = el('<a download="' + esc(name) + '" href="' + url + '" style="display:none">csv</a>');
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    toast('<b>Saved.</b> Look for ' + esc(name) + ' in your downloads, then send it to the CP team.', '', 4200);
+  } catch (e) {
+    openModal('<div class="modal-head mc"><h2>Your results</h2></div><div class="modal-body"><p>Download is blocked here. Copy this text and send it to the CP team.</p>' +
+      '<textarea readonly style="width:100%;height:140px;font:13px monospace">' + esc(csv.replace('﻿', '')) + '</textarea><div class="actions"><button class="btn" id="x-ok">Close</button></div></div>', { onEscape: closeModal });
+    $('#x-ok').onclick = closeModal;
+  }
+}
+
+/* =============================================================================
  * 90 SCREENS: home, map, mission intro, results. Boot.
  * ========================================================================== */
-var BADGE_ICON = { 'site-boss': 'star', 'flawless': 'shield', 'hot-streak': 'flame', 'rule-keeper': 'lock' };
+var BADGE_ICON = { 'site-boss': 'star', 'flawless': 'shield', 'hot-streak': 'flame', 'rule-keeper': 'lock', 'last-mile-hero': 'truck' };
 function logoHTML(key, label) {
   var src = (C.logos || {})[key];
   return src ? '<img src="' + esc(src) + '" alt="' + esc(label) + ' logo">' : '<span class="logo-ph" title="Add the official logo in CONTENT.logos">' + esc(label) + '<br>logo</span>';
@@ -7670,10 +7829,10 @@ var Screens = {
     if (!next) C.missions.forEach(function (M, i) { if (!next && isUnlocked(i)) next = M; });
     ui().innerHTML = '<div class="topbar"><button class="icon-btn" id="m-home" aria-label="Home and settings">' + icon('map') + '</button>' +
       '<span class="pill grow" style="min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Your journey · ' + esc(t.short) + '</span>' +
-      '<span class="pill">' + icon('star', 'var(--gold)') + stars + '/' + (C.missions.length * 3) + '</span></div>' +
+      '<span class="pill">' + icon('star', 'var(--gold)') + stars + '/' + (C.missions.filter(isPlayable).length * 3) + '</span></div>' +
       '<div class="dock" id="dock"><div class="dock-inner"><div id="m-sel"></div>' +
         (function () { var soon = C.missions.filter(function (m) { return !isPlayable(m); }).map(function (m) { return m.number; }); return soon.length ? '<p class="small muted" style="margin:8px 0 0">Coming soon: Mission' + (soon.length > 1 ? 's ' : ' ') + soon.join(', ') + '.</p>' : ''; })() +
-        '<div class="row" style="margin-top:6px"><button class="btn sm alt" id="m-rules">Critical rules</button><button class="btn sm alt" id="m-reset" style="color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad)">Reset progress</button></div>' +
+        '<div class="row" style="margin-top:6px"><button class="btn sm alt" id="m-report">My report</button><button class="btn sm alt" id="m-rules">Critical rules</button><button class="btn sm alt" id="m-reset" style="color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad)">Reset progress</button></div>' +
       '</div></div>';
     var stopBtns = {};
     function showSel(M) {
@@ -7699,8 +7858,12 @@ var Screens = {
     showSel(next || C.missions[0]);
     $('#m-home').onclick = Screens.home;
     $('#m-rules').onclick = showRules;
+    $('#m-report').onclick = Screens.final;
     $('#m-reset').onclick = function () { confirmModal('Reset progress?', 'This clears scores, stars, badges and unlocks on this device. Your name, organisation, state and track are kept.', 'Reset', function () { Store.reset(); Screens.map(); }); };
   },
+
+  /* ---------------- Final report (85-final.js) ---------------- */
+  final: function () { finalReport(); },
 
   /* ---------------- Mission intro ---------------- */
   intro: function (id) {
@@ -7724,7 +7887,7 @@ var Screens = {
     var title = done ? 'Mission complete!' : (rec.status === 'critical' ? 'Stopped by a critical rule' : 'Out of lives');
     var line = done ? (rec.stars === 3 ? 'Outstanding. A fair, safe and free distribution.' : 'Well done. Check the topics below, then try for three stars.')
                     : (rec.status === 'critical' ? 'That rule protects people and the pipeline. Read it once more, then go again.' : 'Three slips and the day stops. Review the topics below and try again.');
-    var weak = groupRefs(rec.mistakes);
+    var weak = groupRefs(rec.mistakes), allDone = journeySummary().all;
     ui().innerHTML = '<div class="page"><section class="card" style="text-align:center">' +
       '<h2 style="font-size:30px">' + esc(title) + '</h2>' +
       (done ? '<div class="big-stars">' + [0, 1, 2].map(function (i) { return '<span class="' + (i < rec.stars ? 'on' : '') + '">' + icon('star', i < rec.stars ? 'var(--gold)' : '#D5DDEB') + '</span>'; }).join('') + '</div>' : '') +
@@ -7736,11 +7899,12 @@ var Screens = {
       (weak.length ? '<div style="text-align:left;margin-top:10px"><h3>Topics to review</h3><ul class="review">' + weak.map(function (w) { return '<li><span class="ref">' + esc(w.ref) + '</span> ' + w.count + ' slip' + (w.count > 1 ? 's' : '') + '</li>'; }).join('') + '</ul></div>' : '<p style="margin-top:10px"><b>No slips.</b> Every move was right.</p>') +
       (newBadges.length ? '<div style="text-align:left"><h3>New badge' + (newBadges.length > 1 ? 's' : '') + '</h3><div class="badges">' + newBadges.map(function (b) { return '<div class="badge new">' + icon(BADGE_ICON[b.id] || 'star', 'var(--blue)') + '<b>' + esc(b.title) + '</b>' + esc(b.desc) + '</div>'; }).join('') + '</div></div>' : '') +
       (newUnlocks.length ? '<div style="text-align:left;margin-top:10px"><h3>Unlocked</h3>' + newUnlocks.map(function (u) { return '<div class="row" style="margin-bottom:6px">' + (u.kind === 'truckColor' ? '<span style="width:28px;height:28px;border-radius:8px;background:' + u.value + ';display:inline-block"></span>' : icon('banner', C.ngo.color, 'width="28" height="28"')) + '<b class="grow">' + esc(u.label) + '</b>' + (u.kind === 'truckColor' ? '<button class="btn sm" data-equip="' + u.value + '">Use it</button>' : '<span class="small muted">On your compound</span>') + '</div>'; }).join('') + '</div>' : '') +
-      '<div class="actions" style="justify-content:center"><button class="btn alt" id="r-map">Map</button><button class="btn mc big" id="r-again">' + (done ? 'Play again' : 'Try again') + '</button></div>' +
+      '<div class="actions" style="justify-content:center"><button class="btn alt" id="r-map">Map</button><button class="btn ' + (allDone ? 'alt' : 'mc big') + '" id="r-again">' + (done ? 'Play again' : 'Try again') + '</button>' + (allDone ? '<button class="btn big" id="r-final">Final report</button>' : '') + '</div>' +
       '</section></div>';
     if (done) { Sound.fanfare(); confetti(); }
     $$('[data-equip]').forEach(function (b) { b.onclick = function () { Store.get().truckColor = b.getAttribute('data-equip'); Store.save(); b.textContent = 'In use'; b.disabled = true; }; });
     $('#r-map').onclick = Screens.map;
+    if (allDone) $('#r-final').onclick = Screens.final;
     $('#r-again').onclick = function () { startMission(M.id); };
     var w = makeWorldView({ top: 0, bottom: 0 }); GFX.setView(w);
   }
