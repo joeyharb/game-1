@@ -1,0 +1,15 @@
+{
+  "name": "last-mile-heroes-tools",
+  "private": true,
+  "description": "Developer tooling only: bundles Three.js and assembles the single-file game. Not needed to play or edit the game.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node playtest.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2",
+    "playwright": "^1.56.1",
+    "three": "^0.170.0"
+  }
+}
