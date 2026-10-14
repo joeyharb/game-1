@@ -1,136 +1,135 @@
 # Question map
 
-Every question in `content.js`, its level, and the source it was taken from.
+Every playable item in `content.js`, the mission it belongs to, and its source.
 "SOP" is the IOM South Sudan Core Pipeline Operations SOP (Draft 1, September 2026). "Budget tool" and sheet names refer to CP Budget Tool v2 (October 2026). Both files are in `../source/`.
 
-This file is generated from `content.js`. After editing questions, regenerate it with `node tools/make_question_map.js .` (needs Node.js), or edit the rows by hand.
+This file is generated from `content.js`. After editing, regenerate it with `node tools/make_question_map.js .` (needs Node.js), or edit the rows by hand.
 
-## Level 1: The Journey
+## Mission 1: The Journey (route)
 
-12 questions in the pool, 5 drawn at random per run (questions marked "always" appear every run).
+8 routes, 2 per run (the route marked "always" is in every run). Each correct stop is one scored move.
 
-| ID | Type | Question | Source |
+| ID | Route | Stops in order | Source |
 |---|---|---|---|
-| L1-01 (always) | Order (drag and drop) | Put all nine steps of the Core Pipeline in order, from first to last. | SOP §4, Figure 3 |
-| L1-02 | Order (drag and drop) | Order the first five steps of the pipeline. | SOP §4, Figure 3 |
-| L1-03 | Order (drag and drop) | Order the last six steps, from the request to closing the file. | SOP §4, Figure 3 |
-| L1-04 | Order (drag and drop) | A request has arrived. Put the four review stages of Step 4 in order. | SOP §4.4 |
-| L1-05 | Order (drag and drop) | Order the stock release procedure. | SOP §4.5.1 |
-| L1-06 | Order (drag and drop) | Order the stock statuses an item moves through in IMS. | SOP §4.1.4, §5.1 |
-| L1-07 | Order (drag and drop) | A consignment is coming in. Order the receipt steps. | SOP §4.1.4, §4.1.5 |
-| L1-08 | Order (drag and drop) | A new organization wants to use the pipeline. Order the onboarding steps. | SOP §4.2.2 |
-| L1-09 | Order (drag and drop) | Kits were stolen after collection. Order what happens next. | SOP §4.6.2, Figure 4 |
-| L1-10 | Order (drag and drop) | Follow a kit through the supply chain. Put the stops in order. | SOP §2, Figure 1 |
-| L1-11 | Order (drag and drop) | A partner keeps missing reports. Order the compliance ladder from mildest to most severe. | SOP §4.2.3 |
-| L1-12 | Order (drag and drop) | Order the planning and sourcing steps for replenishment. | SOP §4.1.1, §4.1.3 |
+| R-01 (always) | The nine CP steps | Procurement and prepositioning > Partner onboarding > Trigger and needs assessment > Request and endorsement > Stock release > Distribution > Distribution reporting > Post-distribution monitoring > Closure | SOP §4, Figure 3 |
+| R-02 | Request review | CP completeness check (24h) > SFP sub-national review (48h) > Cluster national approval (24h) > CP confirms stock and allocates | SOP §4.4 |
+| R-03 | Stock release | CP team raises the SWR in IMS > CP Cluster Focal Point approves the SWR > Partner confirms collection 24h ahead > Partner checks and signs > Warehouse records the release in IMS | SOP §4.5.1 |
+| R-04 | Receipt in Juba | Pre-alert sent with the PO > Joint visual control and two counts > Receipt signed > Warehouse approves stock input > Prepositioned to field hubs | SOP §4.1.4, §4.1.5 |
+| R-05 | Partner onboarding | DDA and registration to the cluster > Cluster validates (3 to 5 days) > CP team issues the agreement > One Requester registered > Orientation (SOP, PSEA, non-fee) | SOP §4.2.2 |
+| R-06 | Supply chain journey | LTA supplier delivers to Juba > Juba hub: consolidation and QC > Transfer to a field hub > Partner collects on a signed issuance form > Distribution to households | SOP §2, Figure 1 |
+| R-07 | Stock status in IMS | Registered at PO stage > Available > Committed (SWR approved) > Released (dispatched and signed) | SOP §4.1.4, §5.1 |
+| R-08 | Compliance ladder | Reminder > Hold > Suspension > De-registration | SOP §4.2.3 |
 
-## Level 2: Who Does What
+## Mission 2: Who Does What (catch)
 
-11 questions in the pool, 6 drawn at random per run.
+19 task cards, 8 per run.
 
-| ID | Type | Question | Source |
+| ID | Task | Owner | Source |
 |---|---|---|---|
-| L2-01 | Match | Which unit does each job? | SOP §3.1, Table 4 |
-| L2-02 | Match | In the RACI, who is Accountable (A) for each activity? | SOP §3.2, Table 5 |
-| L2-03 | Match | Tricky ones: who is Accountable (A)? | SOP §3.2, Table 5 |
-| L2-04 | Match | In the RACI, who is Responsible (R): who actually does the work? | SOP §3.2, Table 5 |
-| L2-05 | Match | Who signs each document? | SOP §4.11, Table 14 |
-| L2-06 | Match | Step 5, stock release. Who does what? | SOP §4.5 |
-| L2-07 | Match | Step 4, request and endorsement. Who handles each stage? | SOP §4.4 |
-| L2-08 | Match | Onboarding and compliance. Who does it? | SOP §4.2.2, §4.2.3 |
-| L2-09 | Match | Who sets each stock status in IMS? | SOP §5.1, Table 15 |
-| L2-10 | Match | Who produces each report or alert? | SOP §5.2, §5.3, §4.7 |
-| L2-11 | Match | Monitoring and closure. Who does it? | SOP §4.8, §4.9 |
+| T-01 | Demand forecast and procurement plan | CP team | SOP §3.1, §3.2 |
+| T-02 | Market assessment, LTAs and purchase orders in WAVE | Supply Chain | SOP §3.1 |
+| T-03 | Receipt, counting, storage and IMS stock input approval | Warehouse | SOP §3.1 |
+| T-04 | Validate needs, endorse targeting, decide allocation | Cluster | SOP §3.1 |
+| T-05 | Approve the SWR in IMS | CP Cluster Focal Point | SOP §4.5, §4.11 |
+| T-06 | Raise the SWR in IMS | CP team | SOP §4.5 |
+| T-07 | Pick, load and dispatch the stock | Warehouse | SOP §4.5, §3.2 |
+| T-08 | Confirm collection 24 hours ahead and sign at collection | Partner | SOP §4.5.1 |
+| T-09 | Needs assessment within 1 to 5 days | Partner | SOP §4.3 |
+| T-10 | Request completeness review within 24 hours | CP team | SOP §4.4 |
+| T-11 | Freight, customs clearance and transport from Juba to the hubs | Supply Chain | SOP §3.1 |
+| T-12 | Distribution report within 15 days and 5W update | Partner | SOP §4.7 |
+| T-13 | PDM on a sample of distributions, focused on the items | CP team | SOP §4.8 |
+| T-14 | Issue the distribution agreement and register the Requester | CP team | SOP §4.2.2 |
+| T-15 | Validate a new partner's capacity and presence | Cluster | SOP §4.2.2 |
+| T-16 | Report loss or theft within 24 hours | Partner | SOP §4.6.2 |
+| T-17 | Send the standing expiry alert | Warehouse | SOP §5.2 |
+| T-18 | National approval of the request | Cluster | SOP §4.4 |
+| T-19 | Monthly CP status snapshot | CP team | SOP §5.3 |
 
-## Level 3: Spot the Error
+## Mission 3: Spot the Error (inspect)
 
-11 questions in the pool, 5 drawn at random per run.
+17 forms, 6 per run (at least one clean form each run).
 
-| ID | Type | Question | Source |
+| ID | Form | Problem line (or clean) | Source |
 |---|---|---|---|
-| L3-01 | Spot the error | Grace has sent this Core Pipeline Request. What is wrong? | SOP §4.3, §4.4, §2.2 |
-| L3-02 | Spot the error | A second request from Grace. Find the mistakes. | SOP §4.4, §2.1 |
-| L3-03 | Spot the error; critical CR1 | Deng is about to release stock to a partner. Check the release file. | SOP §4.5, §4.5.1, §4.5.2 |
-| L3-04 | Spot the error; critical CR1 | Stock is moving from Juba to Bentiu. Check the transfer. | SOP §4.5, §4.5.2 |
-| L3-05 | Spot the error | A supplier truck has arrived in Juba. Check the receipt record. | SOP §4.1.4, Table 7 |
-| L3-06 | Spot the error; critical CR5 | Review this distribution report before it is logged. | SOP §4.6, §4.6.2, §4.7 |
-| L3-07 | Spot the error; critical CR3 | Check this partner file before the partner is allowed to request. | SOP §4.2.1, §4.2.2, §1 |
-| L3-08 | Spot the error | Grace shares the distribution plan. What does not meet the standard? | SOP §4.6, Table 12 |
-| L3-09 | Spot the error | After endorsement, Grace needs to change the site. Check the change note. | SOP §4.4, §4.6.1 |
-| L3-10 | Spot the error | Check this draft of the monthly CP status snapshot. | SOP §5.3, §6, §6.1 |
-| L3-11 | Spot the error; critical CR6 | Review the complaints log from a distribution. | SOP §7.2, §7.3 |
+| D-01 | Core Pipeline Request (CPR Form 2026) | Clean: approve | SOP §4.3, §4.4 |
+| D-02 | Core Pipeline Request (CPR Form 2026) | Warehouse: Wau hub | SOP §2.2, §4.4 |
+| D-03 | Core Pipeline Request (CPR Form 2026) | Needs assessment: 5 months ago | SOP §4.3, §4.4 |
+| D-04 | SNFI Pipeline Request Form | SNFI standard kits requested: 2,400 | SOP §2.1, §4.4 |
+| D-05 | SNFI Pipeline Request Form | Sent to: CP officer by WhatsApp only | SOP §4.4 |
+| D-06 | Release to partner | Clean: approve | SOP §4.5, §4.5.1, §4.5.2 |
+| D-07 | Release to partner | Dispatch authority: Email from the CP officer (critical CR1) | SOP §4.5 |
+| D-08 | Release to partner | Release document: Waybill | SOP §4.5.2 |
+| D-09 | Hub transfer Juba to Bentiu | Clean: approve | SOP §4.5, §4.5.2 |
+| D-10 | Hub transfer Juba to Bentiu | Authority: Verbal instruction from the warehouse manager (critical CR1) | SOP §4.5 |
+| D-11 | Receipt record | Counting: One count by the warehouse team | SOP §4.1.4 |
+| D-12 | Partner file | DDA: Last validated 30 months ago | SOP §4.2.1, §4.2.2 |
+| D-13 | Partner file | Beneficiary registration: Small fee per household to cover staff costs (critical CR3) | SOP §1, §4.2.3, §7.2 |
+| D-14 | SNFI distribution report | Loss: 20 blankets stolen 3 weeks ago, first reported here (critical CR5) | SOP §4.6.2, §4.7 |
+| D-15 | SNFI distribution report | Clean: approve | SOP §4.6, §4.7 |
+| D-16 | Distribution plan | Complaints: Hotline only, no desk at the site | SOP §4.6 |
+| D-17 | Complaints and feedback log | PSEA allegation against a staff member: Logged in the register for monthly analysis (critical CR6) | SOP §7.2, §7.3 |
 
-## Level 4: Buffer Watch
+## Mission 4: Buffer Watch (buffer)
 
-14 questions in the pool, 6 drawn at random per run.
+8 monthly decisions on one stream (SNFI or WASH, random), plus 2 call events from a pool of 6.
 
-| ID | Type | Question | Source |
+| ID | Item | Right move | Source |
 |---|---|---|---|
-| L4-01 | Choice | SNFI stock is 120,000 standard kits. Which band are we in? | SOP §6, Figure 6 |
-| L4-02 | Choice | SNFI stock is 60,000 kits: Consuming buffer. What should the CP team do? | SOP §6.3, Table 19 |
-| L4-03 | Choice | WASH stock is 50,000 standard kits. Which band? | SOP §6, Figure 6 |
-| L4-04 | Choice | WASH stock is in the red band. What does the CP team do? | SOP §6.3, Table 19 |
-| L4-05 | Choice | WASH stock is 100,000 kits. A colleague says "That is more than 88,000, so we are Healthy." Which band is it really? | SOP §1, §6, Figure 6 |
-| L4-06 | Choice | Average SNFI consumption is 11,000 kits a month. What is the SNFI buffer? | SOP §6, Figure 6 |
-| L4-07 | Choice | Imaginary example: consumption rises to 15,000 kits a month. What is the new buffer? | SOP §6, §6.1 |
-| L4-08 | Choice | Why is the lead time factor 4 months? | SOP §6.1 |
-| L4-09 | Choice | How often is the buffer refreshed against actual consumption? | SOP §6.1, §5.3 |
-| L4-10 | Choice | There is enough of every WASH kit item for 50,000 kits, except filter cloths: only 10,000. How many complete WASH kits do we have? | SOP §6.2 |
-| L4-11 | Choice | The buffer is... | SOP §6.1 |
-| L4-12 | Choice; critical CR2 | SNFI stock is red. Grace calls: "Just release 2,000 kits now, the cluster will endorse next week." What do you do? | SOP §4.4, §4.5, §6.3 |
-| L4-13 | Choice | For the pipeline break calculation, which stock is counted? | SOP §6.2 |
-| L4-14 | Choice | Stock is less than need. Which of these is NOT a prioritisation criterion? | SOP §4.3, Table 10 |
+| Monthly | Healthy band | Business as usual | SOP §6, §6.3 |
+| Monthly | Consuming buffer, no order on the way | Start replenishment | SOP §6, §6.3 |
+| Monthly | Consuming buffer, order on the way | Carry on (or order) | SOP §6, §6.3 |
+| Monthly | Urgent replenishment | Escalate and ration | SOP §6, §6.3 |
+| E-01 | "Stock is tight. Just release 2,000 kits now, the cluster will endorse next week." (critical CR2) | Route the request for endorsement first | SOP §4.4, §4.5 |
+| E-02 | We hold enough of every WASH kit item for 50,000 kits, except filter cloths: only 10,000. How many complete kits? | 10,000: one missing item breaks the kit | SOP §6.2 |
+| E-03 | A donor asks: "Can you report the buffer as its own line in our report?" | No: it is a planning and advocacy figure; donors see kits against the project that funded them | SOP §6.1 |
+| E-04 | Two locations need kits and there is not enough for both. How do we choose? | Apply the criteria: severity, recency, protection risks, time since last assistance, access | SOP §4.3 |
+| E-05 | "Funding is not confirmed yet, but shall I raise the PO in WAVE now to save time?" | No: a PO is raised only once funding is confirmed and the project activated | SOP §4.1.1 |
+| E-06 | A partner has not collected approved stock 15 days after SWR approval. What happens? | Cancel the uncollected lines: they return from committed to available | SOP §4.5.1, §4.10 |
 
-## Level 5: Kit Builder
+## Mission 5: Kit Builder (pack)
 
-12 questions in the pool, 6 drawn at random per run.
+18 items, 10 per run, then one bonus card.
 
-| ID | Type | Question | Source |
+| ID | Item | Right box(es) | Source |
 |---|---|---|---|
-| L5-01 | Choice, several answers | Pack the SNFI standard kit. Select every item that goes in it. | SOP §2.1, Table 2; Budget tool, Kits sheet |
-| L5-02 | Choice, several answers | Pack the WASH standard kit. Select every item that goes in it. | SOP §2.1, Table 2; Budget tool, Kits sheet |
-| L5-03 | Choice, several answers | Emergency shelter kit: which items are added only where they are not available locally? | SOP §2.1, Table 2 |
-| L5-04 | Choice | How many plastic sheets (4x6m) are in one SNFI standard kit? | SOP §2.1, Table 2 |
-| L5-05 | Choice | How many water purification tablets are in one WASH standard kit? | SOP §2.1, Table 2; Budget tool, Kits sheet |
-| L5-06 | Match | Which cluster endorses each kit? | SOP §2.1, Table 2 |
-| L5-07 | Match | Which kit does each item belong to? | SOP §2.1, Table 2 |
-| L5-08 | Choice | Which list shows the five kit categories in the CP budget tool? | Budget tool, Kits sheet (Kit summary) |
-| L5-09 | Choice, several answers | SNFI and WASH follow one CP process. Where do they differ? Select all that apply. | SOP §1 |
-| L5-10 | Choice | A household received an SNFI standard kit. Can it also receive a WASH standard kit? | SOP §2.1 |
-| L5-11 | Choice | What household size is used for planning? | SOP §2.1; Budget tool, Parameters (B. Targets) |
-| L5-12 | Choice | In the pipeline break calculation, how are hygiene kits and MHM kits counted? | SOP §6.2 |
+| I-01 | Plastic sheet 4x6m | SNFI standard kit or Emergency shelter kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-02 | Rubber rope ties | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-03 | Rope bundle | Emergency shelter kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-04 | Blanket | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-05 | Mosquito net | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-06 | Kanga | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-07 | Kitchen set | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-08 | Sleeping mat | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-09 | Solar lamp | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-10 | NFI bag | SNFI standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-11 | Bamboo bundle | Emergency shelter kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-12 | Wooden poles | Emergency shelter kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-13 | Bucket with tap | WASH standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-14 | Bucket without tap | WASH standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-15 | Filter cloth | WASH standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-16 | Bars of soap | WASH standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-17 | Water purification tablets | WASH standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| I-18 | PuR flocculant sachets | WASH standard kit | SOP §2.1, Table 2; Budget tool, Kits sheet |
+| K-B1 | Boxes are sealed. Who endorses the SNFI and emergency shelter kits? | SLSC Cluster | SOP §1, §2.1 |
 
-## Level 6: Budget Logic
+## Mission 6: Budget Builder (budget)
 
-21 questions in the pool, 6 drawn at random per run.
+7 challenges, 4 per run. The right answer (which bars grow) is calculated by the game from the budget tool logic.
 
-| ID | Type | Question | Source |
+| ID | Change | Bars that grow | Source |
 |---|---|---|---|
-| L6-01 | Order (drag and drop) | Put the budget tool steps in order. | Budget tool, Parameters (How to use this tool) |
-| L6-02 | Choice | Target: 1,000 households. 50% of households receive a WASH standard kit. How many WASH kits does the tool plan? | Budget tool, Parameters (C. Kit mix) |
-| L6-03 | Choice | Kit mix: SNFI 100%, WASH 80%, Hygiene 50%. That adds up to 230%. Is that an error? | Budget tool, Parameters (C. Kit mix, D. Delivery plan); SOP §2.1 |
-| L6-04 | Choice | Delivery plan: Bor 60%, Wau 30%. What does the tool say? | Budget tool, Parameters (D. Delivery plan); Budget sheet (5. Checks) |
-| L6-05 | Choice | Where does the cost per kit come from? | Budget tool, Kits sheet; SOP §4.1.1 |
-| L6-06 | Choice | LTA prices are quoted delivered to Juba. Should you add a separate line for freight to Juba? | SOP §4.1.1; Budget sheet (B. Supplies) |
-| L6-07 | Choice, several answers | Which lines sit in category B, "Supplies, commodities and materials"? Select all that apply. | Budget sheet (3. Budget breakdown, B); SOP §1 |
-| L6-08 | Choice | Insurance and the loss and damage allowance are a percentage of... | Budget sheet (B.9, B.10); Other Costs (1. Rates and percentages) |
-| L6-09 | Choice | Blankets and plastic sheets are bulky but light. What usually sets the number of trucks? | Budget sheet (2. Delivery plan and transport); Other Costs (Truck loading assumptions) |
-| L6-10 | Choice | Imaginary example: 100 chargeable tonnes go by road. Trucks carry 40 tonnes. How many trucks does the tool count? | Budget sheet (2. Delivery plan and transport, trucks) |
-| L6-11 | Choice | Loading and offloading is charged at USD 200 per truck. Trucks go from 3 to 5. What happens to the loading line? | Budget sheet (B.8); Other Costs (5. Surge loading); SOP §4.1.5 |
-| L6-12 | Choice | How does the tool cost warehousing (category C)? | Budget sheet (C. Warehousing); Other Costs (7. Warehouse rates per tonne) |
-| L6-13 | Choice | Imaginary example: a post costs USD 10,000 a month. It spends 50% of its time on a 6-month project. What does the tool charge? | Budget tool, Parameters (F. Staff time); Budget sheet (A) |
-| L6-14 | Choice | 1,000 target households; IOM will monitor 30% itself. At USD 15 per household, what is the PDM line? | Budget sheet (E. PDM); Other Costs (11. Post-distribution monitoring) |
-| L6-15 | Choice | Imaginary example: total direct costs are USD 100,000. The Programme Support Cost is 7%. What is the total budget? | Budget sheet (G. Programme Support Cost); Other Costs (1. Rates) |
-| L6-16 | Choice, several answers | New LTA: the blanket price goes up. Which lines change? Select all that apply. | Budget tool, Kits sheet; Budget sheet (B, G, 4. Unit costs) |
-| L6-17 | Choice | Target households double, with the same kit mix and delivery plan. Which line does NOT rise by itself? | Budget sheet (A, B, C, E) |
-| L6-18 | Choice | 500 households switch from the SNFI standard kit to the emergency shelter kit. Apart from supplies, which costs jump most? | Budget tool, Kits sheet (weight per kit); Budget sheet (B.6, C) |
-| L6-19 | Choice | Imaginary example: total budget USD 600,000 for 1,000 households. What is the cost per person? | Budget sheet (4. Unit costs) |
-| L6-20 | Choice | How is each transport mode charged in the tool? | Budget sheet (B.6, B.7); SOP §4.1.5 |
-| L6-21 | Choice, several answers | Which inputs drive the travel line (category D)? Select all that apply. | Budget tool, Parameters (G. Travel); Budget sheet (D) |
+| B-01 | Target households double, same kit mix. | B Kits, B Transport, C Warehousing, G PSC | Budget sheet (A to G) |
+| B-02 | New LTA: the SNFI kit price goes up. | B Kits, G PSC | Kits sheet; Budget sheet (B, G) |
+| B-03 | 500 households switch from the SNFI kit to the emergency shelter kit. | B Kits, B Transport, C Warehousing, G PSC | Kits sheet (weight per kit); Budget sheet (B, C) |
+| B-04 | Staff time charged to the project goes from 20% to 40%. | A Staff, G PSC | Parameters (F); Budget sheet (A) |
+| B-05 | IOM will now monitor 30% of households itself (PDM was 0%). | E PDM, G PSC | Parameters (E); Budget sheet (E) |
+| B-06 | Two more UNHAS monitoring trips are planned. | D Travel, G PSC | Parameters (G); Budget sheet (D) |
+| B-07 | The project runs 12 months instead of 6. | A Staff, G PSC | Parameters (A, F); Budget sheet (A) |
 
-## Level 7: Boss Round
+## Mission 7: Boss Convoy (convoy)
 
-3 branching scenarios; one is picked at random per run.
+3 branching scenarios; one per run. Each checkpoint is one decision.
 
 | ID | Scenario | Decision | Source |
 |---|---|---|---|
@@ -166,4 +165,4 @@ This file is generated from `content.js`. After editing questions, regenerate it
 | CR5 | Loss, damage, theft or diversion: report within 24 hours | SOP §4.6.2 |
 | CR6 | PSEA allegations go straight to IOM PSEA channels | SOP §7.2, §7.3 |
 
-Total: 101 questions and decisions.
+Total: 100 playable items.

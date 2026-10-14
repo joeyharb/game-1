@@ -23,6 +23,9 @@
 - Budget tool "Other delivery points" (IOM delivering straight to a location): close to last-mile, so only hub destinations are used.
 - Exact procurement thresholds table (SOP §4.1.2): not used, since it is Supply Chain detail more than CP practice and was under review in the SOP comments.
 
-## Numbers used in Budget Logic
+## Game simplifications in version 2
 
-Budget Logic uses small, round, imaginary examples (for example "1,000 households, 50% receive a WASH kit"). They are labelled as examples and only show how the tool calculates. The real rates used (USD 200 loading per truck, USD 15 PDM per household, 7% PSC, 1.61% insurance, 0.2% loss and damage, 6 persons per household) come from the budget tool and SOP.
+- **Buffer Watch (Mission 4):** monthly consumption (SNFI 11,000, WASH 17,000), the buffer formula, the three bands, their actions and the 4-month lead time come from SOP §6. The start stock, the size of a delivery, the one-month demand spike and the effect of rationing are game simplifications, and the game says so on screen.
+- **Budget Builder (Mission 6):** the bars follow the budget tool logic (kit cost and weight per kit from the Kits sheet, Bor road truck rates, USD 200 loading per truck, insurance 1.61%, loss and damage 0.2%, USD 15 PDM per household, UNHAS USD 550, DSA USD 91, PSC 7%). The base project (1,000 households, staff cost, months, trips, nights) is imaginary. No USD amounts are shown: bars only show what grows. The warehouse cost per tonne inside the model rests on budget-tool figures marked "To confirm" (4,500 MT, 85% share); it only affects bar size, never an answer.
+- **Hygiene and MHM kits** are not on the Kit Builder belt or in the budget base project, because their contents are not listed in either source.
+- **Transport volume rule:** the budget tool charges the higher of weight or volume; the model uses weight only because the truck volume (60 m3) is marked "To confirm".

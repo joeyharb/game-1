@@ -2,17 +2,19 @@
 
 A training game on the IOM South Sudan SNFI + WASH Core Pipeline (CP): the SOP workflow, roles, forms, buffer logic, kits and the CP budget tool logic.
 
-Players are cluster partners who request from the pipeline and the IOM CP team (pipeline, warehouse, supply chain). It works for onboarding (first play) and refreshers (replay): questions shuffle on every run.
+Version 2 is a set of seven short **missions** played in a small 3D (isometric) world: you drive trucks, catch tasks, stamp forms, run a warehouse, pack kits, predict budget changes and lead an emergency convoy. Very few classic quiz questions remain.
 
-Sources: `../source/IOM_SSD_Core_Pipeline_SOP_-_Draft_1_8.docx` and `../source/CP_Budget_Tool_v2_FINAL.xlsx`. Every question cites its SOP section or budget sheet (see `question_map.md`).
+Players: cluster partners who request from the pipeline, and the IOM CP team (pipeline, warehouse, supply chain). Use it for onboarding (first play) and refreshers (replay). Content shuffles on every run.
+
+Sources: `../source/IOM_SSD_Core_Pipeline_SOP_-_Draft_1_8.docx` and `../source/CP_Budget_Tool_v2_FINAL.xlsx`. Every playable item cites its SOP section or budget sheet (see `question_map.md`).
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `index.html` | The game: layout, styles and game logic. No need to touch it to change text. |
-| `content.js` | All game content: settings, colours, characters, critical rules, levels, questions, answers, explanations, sources. |
-| `question_map.md` | Every question with its level and source section. |
+| `index.html` | The game: layout, styles, 3D drawing and game logic. No need to touch it to change text. |
+| `content.js` | All game content: settings, colours, characters, critical rules and the seven missions. |
+| `question_map.md` | Every playable item with its mission and source section. |
 | `SKIPPED.md` | What was left out and why. |
 | `tools/make_question_map.js` | Regenerates `question_map.md` from `content.js` (optional, needs Node.js). |
 
@@ -20,159 +22,99 @@ Sources: `../source/IOM_SSD_Core_Pipeline_SOP_-_Draft_1_8.docx` and `../source/C
 
 1. Keep `index.html` and `content.js` in the same folder.
 2. Double-click `index.html`. It opens in any modern browser (Edge, Chrome, Firefox, Safari).
-3. That's it: no install, no internet, no server. It works offline.
+3. No install, no internet, no server: it works offline. Desktop first; it also works on tablets.
 
-To share it, zip the folder, or put both files on a shared drive or intranet page. Desktop first; it also works on tablets.
+## The seven missions
 
-## How the game works
+| # | Mission | How it plays | What it teaches |
+|---|---|---|---|
+| 1 | The Journey | Click signposts in the right order; the truck drives there | The nine CP steps, plus one sub-process (review, release, receipt, onboarding...) |
+| 2 | Who Does What | A task card drops; click the right desk before it lands (keys 1 to 6) | Who owns each task: CP team, CP Cluster Focal Point, Supply Chain, Warehouse, Cluster, Partner |
+| 3 | Spot the Error | Stamp each form APPROVE, or click the problem line and stamp RETURN | Request, release, transfer, receipt, partner file, report and complaints rules |
+| 4 | Buffer Watch | Run the stock month by month; pick an action for the band; phone-call events | Buffer formula, the three bands and their actions, 4-month lead time |
+| 5 | Kit Builder | Items ride a conveyor belt; drop each in the right kit box (keys 1 to 3) | SNFI, emergency shelter and WASH kit contents, endorsing cluster |
+| 6 | Budget Builder | Warm-up sliders, then predict which 3D budget bars grow when one input changes | How the budget tool links households, kit mix, prices, staff, PDM and travel to the budget |
+| 7 | Boss Convoy | Drive a convoy; each checkpoint is a branching decision | Mixed emergency scenario (one of three, random) |
 
-- **7 levels**, one per topic, 2 to 3 minutes each. A full run takes 10 to 15 minutes.
-  1. The Journey: put workflow steps in order (drag and drop, or arrow buttons)
-  2. Who Does What: match tasks to roles and sign-off owners
-  3. Spot the Error: click the mistakes on a mock form
-  4. Buffer Watch: read a stock gauge and choose the band or action
-  5. Kit Builder: pack the kits, SNFI vs WASH
-  6. Budget Logic: how the budget tool goes from households and kit shares to cost per household
-  7. Boss Round: a branching emergency scenario (one of three, picked at random)
-- **3 lives per level.** A wrong answer costs a life. Lose all three and the level stops.
-- **Critical rules.** Breaking one ends the level at once, with an explanation. The list is in `content.js` (`criticalRules`) and on the home screen.
-- **Points:** 100 per right answer plus a streak bonus.
-- **Feedback** after every answer: right or wrong, why, and the source section.
-- **Map:** levels unlock in order on first play. Once all 7 are done, all stay open.
-- **End:** final report with total score, stars per level, weak areas by SOP section, badges and rank. Passing (80% overall by default) unlocks a printable completion card with name, date and score.
-- **Timer:** off by default; the player can switch it on from the home screen or map.
-- **Progress** (name, best scores, stars, badges) is saved in the browser's localStorage. If the browser blocks storage, the game still works but forgets progress on reload. "Reset progress" on the map clears it.
+Shared rules:
+- **3 lives per mission.** A wrong move costs a life and shows why, with the source section.
+- **Critical rules** (in `content.js`, `criticalRules`) stop the mission at once, with an explanation.
+- **Points:** 100 per right move plus a streak bonus.
+- **Map:** missions unlock in order on first play; once all 7 are done, all stay open.
+- **End:** final report with score, stars per mission, weak areas by SOP section, badges and rank. Passing (80% overall by default) unlocks a printable completion card with name, date and score.
+- **Relaxed pace** (home screen or map) slows the falling cards and the conveyor belt.
+- **Progress** is saved in the browser's localStorage. If storage is blocked, the game still works but forgets progress on reload. "Reset progress" on the map clears it.
 
 ## Editing content
 
-Open `content.js` in any text editor (Notepad, VS Code). Edit only the text between quotes, keep the commas and brackets, save, then reload the game.
+Open `content.js` in a text editor (Notepad, VS Code). Edit only the text between quotes, keep commas and brackets, save, reload the game.
 
-If the game shows a blank page after an edit, a comma or quote is probably missing. Undo the last change, or paste the file into a JavaScript checker such as https://jshint.com to find the line.
+If the page goes blank after an edit, a comma or quote is probably missing. Undo the last change, or run `node tools/make_question_map.js .`, which reports the broken line.
 
-Text tips:
+Tips:
 - An apostrophe inside single quotes needs a backslash: `'Grace\'s request'`.
-- Acronyms listed in `glossary` are spelled out automatically the first time they appear in a level. Add new ones there.
+- Acronyms listed in `glossary` are spelled out automatically the first time they appear in a mission. Add new ones there.
+- Every item has an `id` and a `ref` (source shown to players; weak areas are grouped by it). Keep ids unique.
+- To remove an item, delete its `{ ... },` block. Keep at least as many items as the mission's "per run" number.
+- To add an item, copy one of the same mission, give it a new id and edit it. Then update `question_map.md` (`node tools/make_question_map.js .`).
 
-### Change a question
+### Mission data, by type
 
-Find it by its `id` (for example `L4-02`, see `question_map.md`) and edit `prompt`, the answers, `explain` (shown after every answer) or `ref` (the source shown to the player).
+**route** (Mission 1): `routes: [{ id, title, prompt, stops: [...in order...], explain, ref, always }]`. Up to 9 stops per route. `routesPerRun` sets how many routes a run has; `always: true` keeps a route in every run. Keep stop labels short (under 45 characters).
 
-### Remove a question
+**catch** (Mission 2): `desks: [{ role, char }]` (up to 6) and `tasks: [{ id, task, role, ref }]`. Each task's `role` must match a desk `role` exactly. `cardsPerRun`, `fallSeconds`.
 
-Delete the whole `{ ... },` block for that question. Keep at least as many questions in a level as its `questionsPerRun`.
+**inspect** (Mission 3): `docs: [{ id, title, subtitle, fields: [{ label, value }], explain, ref }]`. A form has **at most one** line with `error: true` and a `why`. Add `critical: 'CR1'` to that line if approving the form should stop the mission. Mark a form with no problem `clean: true`. `docsPerRun` (each run includes at least one clean form).
 
-### Add a question
+**buffer** (Mission 4): `months`, `actions` (button labels), `bandFeedback` (text shown after each month), `events: [{ id, speaker, prompt, options: [{ text, correct, critical, why }], explain, ref }]`, `eventMonths`, `eventsPerRun`. Consumption and lead time come from the top-level `buffer` block (SOP §6). The `sim` block holds game simplifications (start stock, delivery size, demand spike, rationing effect); the game tells players these are simplifications.
 
-Copy an existing question of the same type, paste it into the same level's `questions: [ ... ]` list, give it a new unique `id`, and edit it. Add a row to `question_map.md` (or run `node tools/make_question_map.js .`).
+**pack** (Mission 5): `boxes: [{ id, label, color }]` (3), `items: [{ id, name, kits: [box ids], color, why }]`, `itemsPerRun`, `beltSeconds`, and one `bonus` card (same shape as a buffer event).
 
-Fields used by every question:
+**budget** (Mission 6): `bars` (budget categories), `model` (kit cost and weight from the Kits sheet, rates from Other Costs, an imaginary base project), `challenges: [{ id, prompt, change, explain, ref }]`. The game calculates which bars grow, so the answer always follows the model. Supported `change` keys: `hhFactor`, `priceUp: { kit, pct }`, `shift: { from, to, hh }`, `staffPct`, `pdmShare`, `extraTrips`, `months`. Bars show size only; no USD figures are displayed.
 
-| Field | Meaning |
-|---|---|
-| `id` | Unique, e.g. `L5-13`. |
-| `type` | `choice`, `order`, `match` or `spot`. |
-| `speaker` | A character id from `characters` (e.g. `'deng'`). |
-| `prompt` | The question, shown in the speech bubble. |
-| `explain` | Explanation shown after the answer. |
-| `ref` | Source, e.g. `'SOP §4.5'` or `'Budget sheet (B.9)'`. Weak areas are grouped by this text. |
-| `always: true` | Optional. Include the question in every run. |
-
-Per type:
-
-**choice**: one right answer, or several with `multi: true`.
-```js
-{
-  id: 'L4-99', type: 'choice', speaker: 'peter',
-  prompt: 'Which band?',
-  visual: { type: 'gauge', stream: 'SNFI', stock: 60000, hideBands: true },   // optional
-  options: [
-    { text: 'Consuming buffer', correct: true },
-    { text: 'Healthy', why: 'Shown when this wrong answer is picked.' },
-    { text: 'Release now', critical: 'CR2', why: '...' }   // picking it breaks a critical rule
-  ],
-  explain: '...', ref: 'SOP §6'
-}
-```
-Optional: `layout: 'tiles'` shows options as tiles (used in Kit Builder). `visual` can be a `gauge` (stream `SNFI` or `WASH`, stock in kits, `hideBands` hides colours until answered) or a `formula`: `{ type: 'formula', parts: ['1,000 HH', '×', '50%', '=', '?'] }`.
-
-**order**: list `items` in the correct order; the game shuffles them.
-```js
-{ id: 'L1-99', type: 'order', speaker: 'achol', prompt: '...', items: ['First', 'Second', 'Third'], explain: '...', ref: '...' }
-```
-
-**match**: every `pairs[].role` must appear exactly as written in `roles`.
-```js
-{ id: 'L2-99', type: 'match', speaker: 'lual', prompt: '...',
-  roles: ['CP team', 'Warehouse'],
-  pairs: [ { task: 'Raises the SWR', role: 'CP team' }, { task: 'Dispatches', role: 'Warehouse' } ],
-  explain: '...', ref: '...' }
-```
-
-**spot**: a mock form. Mark wrong fields with `error: true` and a `why`. Add `critical: 'CR1'` to a wrong field if *missing* it should end the level.
-```js
-{ id: 'L3-99', type: 'spot', speaker: 'deng', prompt: '...',
-  doc: { title: 'Release to partner', subtitle: 'Training example',
-    fields: [
-      { label: 'Dispatch authority', value: 'Email', error: true, critical: 'CR1', why: '...' },
-      { label: 'Partner signature', value: 'At collection' }
-    ] },
-  explain: '...', ref: '...' }
-```
-
-### Boss round scenarios
-
-Level 7 uses `scenarios` instead of `questions`. Each scenario has a `start` node and `nodes`. Each node has a `speaker`, `text`, `ref`, optional `visual`, and `options`. Each option has `text`, `feedback`, `next` (the next node id, or `null` to end), and either `correct: true` or, for a rule break, `critical: 'CRx'`. Wrong, non-critical options cost a life and continue to their `next` node, so you can send them to a "consequence" node (see `a3b` in scenario BOSS-A). Give each node exactly one correct option.
-
-### Levels
-
-Each level has `title`, `station` (map label), `color`, `host` (character), `intro`, `howTo` and `questionsPerRun` (how many questions are drawn per run). Lowering `questionsPerRun` shortens the level.
+**convoy** (Mission 7): `scenarios: [{ id, title, start, nodes: { id: { speaker, text, ref, visual, options: [{ text, correct, critical, feedback, next }] } } }]`. Give each node exactly one correct option. `next: null` ends the run. A wrong, non-critical option costs a life and continues to its `next` node, so it can lead to a "consequence" node (see `a3b` in BOSS-A). Up to 8 checkpoints per scenario.
 
 ### Characters
 
-In `characters`. Names are fictional. Change `name` and `role` freely. The avatar is drawn from `look`:
+In `characters` (names are fictional). Change `name` and `role` freely. The avatar is drawn from `look`:
 - `skin`, `hairColor`, `shirt`, `bg`: any colour code
 - `hair`: `short`, `long`, `bun`, `headwrap`, `cap` or `bald`
 - `accessory`: `none`, `glasses`, `hardhat`, `lanyard`, `clipboard` or `tablet`
 
-To add a character, copy one, give it a new id (e.g. `mary: { ... }`) and use that id as a `speaker`.
-
 ### Critical rules
 
-In `criticalRules` (CR1 to CR6). Edit the text freely. To add one, add `CR7: { title, rule, ref }` and point a choice option, boss option or spot field to it with `critical: 'CR7'`. The list is a first draft and can change with the SOP.
+In `criticalRules` (CR1 to CR6). Edit the text freely. To add one, add `CR7: { title, rule, ref }` and point an option or form line to it with `critical: 'CR7'`. The list is a first draft and can change with the SOP.
 
-## Changing settings
+## Settings and colours
 
 All in `settings` at the top of `content.js`:
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `passMark` | `0.80` | Overall accuracy to pass and unlock the completion card (0.80 = 80%). |
-| `livesPerLevel` | `3` | Lives per level. |
-| `pointsPerCorrect` | `100` | Points per right answer. |
-| `streakBonus`, `streakBonusMax` | `20`, `100` | Bonus per answer in a streak, and its cap. |
-| `stars` | `0.5 / 0.8 / 1.0` | Level accuracy for 1, 2 and 3 stars. |
-| `timer.enabledByDefault` | `false` | Start with the timer on. |
-| `timer.secondsPerQuestion`, `secondsPerPuzzle` | `45`, `90` | Time per choice question, and per order/match/spot puzzle. |
+| `passMark` | `0.80` | Overall accuracy to pass and unlock the completion card. |
+| `livesPerLevel` | `3` | Lives per mission. |
+| `pointsPerCorrect` | `100` | Points per right move. |
+| `streakBonus`, `streakBonusMax` | `20`, `100` | Bonus per move in a streak, and its cap. |
+| `stars` | `0.5 / 0.8 / 1.0` | Mission accuracy for 1, 2 and 3 stars. |
+| `relaxedPaceFactor` | `1.7` | How much slower "Relaxed pace" makes the timed missions. |
 
-`ranks` sets the rank titles and thresholds (Trainee, Pipeline Pro at 80%, Pipeline Master at 95%). `badges` lists the badges; their `rule` values are explained in the comment above them.
+`ranks` sets rank titles and thresholds (Trainee, Pipeline Pro at 80%, Pipeline Master at 95%). `badges` lists the badges; their `rule` values are explained in the comment above them.
 
-## Changing colours
-
-- **Main colours:** the `theme` block in `content.js` (IOM blue `#0033A0` is the base). Change a hex code and reload.
-- **Level colours:** each level's `color` in `content.js`. Text on top switches automatically between white and dark for readability.
-- The same values exist as fallbacks at the top of the `<style>` block in `index.html` (`:root`), used only if `content.js` has no `theme`.
+**Colours:** the `theme` block in `content.js` (IOM blue `#0033A0` is the base; `grass`, `road` and `water` colour the 3D world). Each mission's `color` sets its accent. Fallback values sit at the top of the `<style>` block in `index.html`.
 
 ## Results and a future leaderboard
 
-- **Export:** on the Final report, "Export results (JSON)" downloads the player's summary, per-level best and latest results, badges, and every attempt.
-- **Data shape:** each attempt is a `ResultRecord` built in `makeResultRecord()` in `index.html`: player, level, scenario, status (`completed`, `failed`, `critical`), critical rule, score, correct, answered, accuracy, stars, lives lost, best streak, mistakes (question id and source), timer on/off, start and finish times, content version.
-- **Adding a backend later:** in `endLevel()` in `index.html`, after `d.results.push(rec)`, send `rec` to your service (for example `fetch(url, { method: 'POST', body: JSON.stringify(rec) })`). A leaderboard can then rank players by summed best `score` per level. Nothing else in the game needs to change.
+- **Export:** on the Final report, "Export results (JSON)" downloads the summary, best and latest results per mission, badges, and every attempt.
+- **Data shape:** each attempt is a `ResultRecord` built in `makeResultRecord()` in `index.html`: player, mission, variant (route, stream or scenario played), status (`completed`, `failed`, `critical`), critical rule, score, right moves, total moves, accuracy, stars, lives lost, best streak, mistakes (item id and source), relaxed pace, start and finish times, content version.
+- **Adding a backend later:** in `endLevel()` in `index.html`, after `d.results.push(rec)`, send `rec` to your service (for example `fetch(url, { method: 'POST', body: JSON.stringify(rec) })`). A leaderboard can rank players by summed best `score` per mission.
 
 ## Testing after edits
 
-1. Open `index.html`, play the level you changed, and check the new question shows and its right answer is accepted.
-2. To reach a level quickly, finish the earlier levels once, or use a browser where all levels are already unlocked.
-3. If you have Node.js, `node tools/make_question_map.js .` also confirms `content.js` loads without syntax errors.
+1. Open `index.html` and play the mission you changed.
+2. Finishing all missions once unlocks every mission for quick checks.
+3. With Node.js, `node tools/make_question_map.js .` confirms `content.js` loads and refreshes the map.
+
+The previous quiz-style version (v1) is in the repository history (commit `3d83df0`).
 
 ## Credits
 
