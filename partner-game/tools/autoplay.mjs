@@ -69,6 +69,30 @@ while (Date.now() - t0 < 420000) {
     if (nx.piece) { await page.click(`#tray .scard[data-id="${nx.piece}"]`); await wait(150); await clickText('.lbl.slot', nx.slot); await wait(300); await shot('04-build'); }
     else if (nx.hub) { await clickText('.lbl.tap', nx.hub); await wait(500); }
     else if (nx.send) { await shot('05-ready'); await page.click('#send'); await wait(1500); await shot('06-review'); }
+  } else if (mission === 'M4') {
+    const nx = await page.evaluate(() => { const r = window.LMH.run(), st = r.debug.st; const o = { phase: st.phase, busy: st.busy };
+      if (st.phase === 'inspect') { const c = st.cartons.find((c) => c.bad && !c.checked); if (c) { c.bub.node.dataset.ap = String(c.i); o.carton = c.i; } }
+      if (st.phase === 'kit' && r.debug.kitItems) o.kit = r.debug.kitItems.findIndex((x) => x.ok);
+      return o; });
+    if (nx.phase === 'book') { if (wrongLeft > 0) { wrongLeft--; await page.click('#cal .mchip[data-d="0"]'); await wait(400); await shot('03-wrong-feedback'); await wait(800); } await shot('04-book'); await page.click('#cal .mchip[data-d="3"]'); await wait(900); }
+    else if (nx.phase === 'drive') { await shot('05-drive'); await page.click('#drive', { force: true }); await wait(2500); }
+    else if (nx.phase === 'inspect' && !nx.busy) { if (nx.carton != null) { await page.click(`[data-ap="${nx.carton}"]`, { force: true }); await wait(400); await shot('06-inspect'); } else { await page.click('#done-check'); await wait(800); } }
+    else if (nx.phase === 'kit' && nx.kit != null && nx.kit >= 0) { await shot('07-kit'); await page.click(`#kit .mchip[data-i="${nx.kit}"]`); await wait(900); }
+    else if (nx.phase === 'sign') { await wait(300); }
+  } else if (mission === 'M5') {
+    // steer away from the nearest obstacle ahead in the truck's lane
+    const mv = await page.evaluate(() => { const st = window.LMH.run().debug.st; if (st.phase !== 'go') return 0;
+      const danger = (l) => st.obs.some((o) => !o.done && o.lane === l && o.z > -9 && o.z < 1);
+      if (!danger(st.lane)) return 0; for (const d of [-1, 1]) { const l = st.lane + d; if (l >= 0 && l <= 2 && !danger(l)) return d; } return 0; });
+    if (mv) { await page.click(mv < 0 ? '#left' : '#right', { force: true }); await shot('04-steer'); }
+    await wait(50); continue;
+  } else if (mission === 'M7') {
+    const nx = await page.evaluate((wrong) => { const r = window.LMH.run(), st = r.debug.st; const o = { phase: st.phase };
+      if (st.phase === 'report') { const P = r.debug.pieces; let i = wrong ? P.findIndex((x) => !x.used && !x.p.good && !x.p.critical) : -1; if (i < 0) i = P.findIndex((x) => !x.used && x.p.good); o.piece = i; }
+      return o; }, wrongLeft > 0);
+    if (nx.phase === 'intro') { await shot('04-intro'); await page.click('#m7-go'); await wait(400); }
+    else if (nx.phase === 'report' && nx.piece >= 0 && mode !== 'late') { const isWrong = await page.evaluate((i) => !window.LMH.run().debug.pieces[i].p.good, nx.piece); try { await page.click(`#m7-tray .mchip[data-i="${nx.piece}"]`, { timeout: 1500 }); } catch (e) { continue; } if (isWrong) { wrongLeft--; await wait(300); await shot('03-wrong-feedback'); } await wait(500); await shot('05-report'); }
+    else if (nx.phase === 'finale') { if (await page.$('#m7-fin')) { await shot('06-finale'); await page.click('#m7-fin'); await wait(400); } }
   }
   await wait(300);
 }

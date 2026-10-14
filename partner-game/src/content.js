@@ -32,7 +32,7 @@ window.CONTENT = {
   meta: {
     title: 'Last Mile Heroes',
     subtitle: 'Partner onboarding game for the IOM South Sudan Core Pipeline (SNFI and WASH)',
-    version: '0.5 (Missions 1, 2, 3, 6)',
+    version: '0.6 (Missions 1-7)',
     sourceNote: 'Based on the IOM South Sudan Core Pipeline SOP (Draft 1, September 2026), the CP Distribution Agreement 2026 and its annexes, and the WASH Cluster Core Pipeline SOP (January 2026).',
     cardNote: 'Training record, not a certification.'
   },
@@ -510,7 +510,7 @@ window.CONTENT = {
         good: { why: 'That carton is fine. Look for torn or wet ones.', ref: 'SOP §4.5.1' }
       },
       kitCheck: {
-        prompt: 'Open one kit. Which item does not belong in it?',
+        prompt: 'Which item does not belong in it?',
         intruders: {
           SNFI: ['1 bucket with tap', '1 filter cloth', '290 water purification tablets', '2 bars of soap'],
           WASH: ['2 blankets', '1 kitchen set', '1 solar lamp', '2 plastic sheets 4x6m']
@@ -810,6 +810,8 @@ window.CONTENT = {
       rulesInPlay: ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8'],
       report: {
         ref: 'SOP §4.7',
+        seconds: 24,        // real seconds the calendar takes to reach the track deadline
+        callAt: 0.4,        // share of the race when the first call (data request) rings
         pieces: [
           { id: 'P-01', text: 'Signed beneficiary list', good: true },
           { id: 'P-02', text: 'Items distributed, by location', good: true },

@@ -96,7 +96,8 @@ function fill(text) {
   var t = track();
   return String(text == null ? '' : text)
     .replace(/\{demo\}/g, t.demo).replace(/\{cluster\}/g, t.cluster)
-    .replace(/\{kit\}/g, t.kits[0].name).replace(/\{ngo\}/g, C.ngo.name);
+    .replace(/\{kit\}/g, t.kits[0].name).replace(/\{ngo\}/g, C.ngo.name)
+    .replace(/\{deadline\}/g, t.reportDeadline).replace(/\{report\}/g, t.report);
 }
 
 /* ---------- Sound: generated with Web Audio, no files ---------- */

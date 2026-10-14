@@ -45,7 +45,10 @@ await page.click('#h-start'); await wait(200);
 log('empty-form hint:', await page.textContent('#h-hint'));
 await page.fill('#f-name', 'Test Player'); await page.fill('#f-org', 'Test Organisation'); await page.selectOption('#f-state', 'Jonglei');
 await page.click(`.track[data-track="${trk}"]`);
+// Missions unlock in order: mark the ones before Mission 6 as done, then pick its stop on the map
+await page.evaluate(() => { const s = window.LMH.store(); ['M1', 'M2', 'M3', 'M4', 'M5'].forEach((id) => { s.missions[id] = { completed: true, best: null, last: null }; }); });
 await page.click('#h-start'); await wait(1300);
+await page.click('.mapstop[aria-label^="Mission 6"]', { force: true }); await wait(300);
 await shot('02-map');
 await page.click('#m-play'); await wait(600);
 await shot('03-intro');
