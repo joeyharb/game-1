@@ -235,6 +235,7 @@ The game uses the **Draft 1** SOP (September 2026). When the endorsed version ar
 |---|---|
 | `index.html` | **The game.** Everything is inside: content, the Three.js 3D library and the code. |
 | `README.md` | This guide |
+| `LastMileHeroes_Guide.pdf` | Player guide and answer key: how to play and pass every mission, with all the right answers (A5 booklet) |
 | `question_map.md` | Every item with its mission, track and source section |
 | `SKIPPED.md` | What was left out on purpose, and how source conflicts were settled |
 | `SOURCES.md` | The source documents and which one wins |
@@ -254,6 +255,7 @@ cd tools
 npm install                 # Three.js, esbuild, Playwright (development only)
 node build.mjs              # writes ../index.html from ../src
 node question-map.mjs       # regenerates ../question_map.md from src/content.js
+node answer-key.mjs         # regenerates ../LastMileHeroes_Guide.pdf (guide and answer key)
 ```
 
 - **Content edited directly in `index.html`?** Run `node build.mjs --keep-content`. It copies
